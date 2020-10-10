@@ -2,7 +2,7 @@ body{
 
     font-family: arial;
     color: white;
-    background-color: rgb(201, 213, 218);
+    background: linear-gradient(rgb(194, 190, 190), blue);
     text-decoration: none;
 }
 ul{
@@ -43,6 +43,21 @@ ul li ul li{
 ul li:hover ul li{
     display: block;
 }
+p{
+    text-indent: 30px;
+}
 
+.omittur{
+    display: block;
+    border: 2px solid rgb(117, 119, 114);
+}
+.omittur1{
+    text-align: center;
+    border: 2px solid rgb(117, 119, 114);
+}
+.omittur2{
+    text-align: center;
+    border: 2px solid rgb(117, 119, 114);
+}
 
 
