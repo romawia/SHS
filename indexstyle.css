@@ -44,7 +44,7 @@ h3{
 }
 .loginedit #logname
 {
-    width: 80%;
+    width: 90%;
     color: rgb(235, 13, 13);
     background: white;
     box-sizing: border-box;
@@ -54,7 +54,7 @@ h3{
 .loginedit #logpass
 {
     border-width: 100%;
-    width: 80%;
+    width: 90%;
     color: rgb(24, 18, 18);
     background: white;
     box-sizing: border-box;
