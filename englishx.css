@@ -1,0 +1,23 @@
+body{
+    background: rgb(216, 193, 193);
+}
+.g1{
+    text-align: center;
+}
+.g2{
+    text-align: left;
+}
+.g3{
+    text-align: center;
+}
+h2{
+    text-align: center;
+}
+.g{
+    font-size: 10px;
+    margin-left: 25%;
+    margin-right: 25%;
+    border: solid black 3px;
+    width: 50%;
+    height: 50%;
+}

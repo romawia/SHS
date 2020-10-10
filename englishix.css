@@ -1,0 +1,94 @@
+body, html{
+    min-width: 5%;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    background-color: rgb(202, 241, 238);
+    overflow:auto;
+}
+.maindiv{
+    text-align: center;
+    float: left;
+    min-width: 5%;
+    
+    
+}
+.love{
+text-transform: uppercase;
+text-decoration: underline;
+height: 50%;
+background-color: silver;
+text-align: center;
+line-break: auto;
+border:2px solid slateblue;
+width: 40%;
+min-width: 10%;
+}
+
+.wedding{
+    text-transform: uppercase;
+    text-decoration: underline;
+    height: 50%;
+    text-align: center;
+    background-color: silver;
+    border:2px solid slateblue;
+    width: 40%;
+min-width: 10%;
+
+}
+
+.family{
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: underline;
+    background-color: silver;
+    border:2px solid slateblue;
+    width: 40%;
+min-width: 10%;
+
+}
+.endlife{
+    text-align: center;
+    text-transform: uppercase;
+text-decoration: underline;
+    height: 50%;
+    background-color: silver;
+    border:2px solid slateblue;
+    width: 40%;
+    min-width: 10%;
+    
+}
+.reunited{
+    text-transform: uppercase;
+text-decoration: underline;
+    padding:0px;
+    text-align: center;
+    direction: inherit;
+    background-color: silver;
+    border:2px solid slateblue;
+    width: 40%;
+    min-width: 10%;
+    height: 25%;
+}
+.firstword{
+    margin-left: 20%;
+    margin-right: 20%;
+    padding-left: 0%;
+    padding-right: 0%;
+    align-items: center;
+    box-sizing: border-box;
+    border: 2px solid rgb(37, 34, 34);
+    font-size:4px;
+    line-height: 8px;
+    color: red;
+    text-decoration: underline;
+    overflow: hidden;
+}
+.E{
+    text-indent: 9px;
+    text-align: center;
+
+}
+h1{
+    text-align: center;
+}

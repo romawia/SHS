@@ -1,0 +1,73 @@
+body
+{
+    font-family: sans-serif;
+    background: linear-gradient(rgb(207, 245, 207),rgb(150, 150, 248), rgb(238, 108, 108));
+}
+h2{
+    text-align: center;
+}
+h3{
+    text-align: center;
+}
+.shs{
+    font-weight: bolder;
+    line-height: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-shadow:50px;
+
+}
+.impot_quote{
+    text-align: center;
+    
+}
+.loginedit{
+    box-shadow: 90px;
+    box-sizing: border-box;
+    margin-top: 15px;
+    align-items: center;
+    padding: 0;
+    margin:0%;
+    margin-left: 25%;
+    width:55%;
+    height: max-content;
+    border: 3px solid rgb(235, 72, 72);
+    align-content: center;
+    border-radius: 10px;
+    opacity: 0.8;
+    background: rgb(117, 113, 110);
+
+}
+.loginedit label{
+    color: white;
+    font-family: sans-serif;
+    letter-spacing: 2px;
+}
+.loginedit #logname
+{
+    width: 80%;
+    color: rgb(235, 13, 13);
+    background: white;
+    box-sizing: border-box;
+    border-radius: 4px;
+    letter-spacing: 2px;
+}
+.loginedit #logpass
+{
+    border-width: 100%;
+    width: 80%;
+    color: rgb(24, 18, 18);
+    background: white;
+    box-sizing: border-box;
+    border-radius: 4px;
+    letter-spacing: 2px;
+}
+.loginedit #bton
+
+
+{
+    font-weight: bold;
+    margin-left: 40%;
+    padding:1;
+    border-radius: 6px;
+    color: tomato;
+}
