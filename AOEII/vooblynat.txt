@@ -1,0 +1,45 @@
+20:30:31 vooblynat2.dll v2.2.5.68 loaded!
+20:30:31 CNatCommunication::Init successful!
+20:30:31 PID = 3576
+20:30:31 bDirectPlay = 1
+20:30:31 bBroadcast = 0
+20:30:31 bRemotePort = 0
+20:30:31 bForceBindLocal = 0
+20:30:31 bNoZeroBytesInIP = 0
+20:30:31 bNoConnectACKs = 0
+20:30:31 bIPXWrapper = 0
+20:30:31 GameShort = AOC
+20:30:31 NetworkDLL = 
+20:30:31 DirectPlayNATHelpCreate [failed #1] in dpnhupnp.dll
+20:30:31 DirectPlayNATHelpCreate [found] in dpnathlp.dll
+20:30:31 CNatCommunication::ThreadEntry IN
+20:30:31 NatRecvMessage - NAT_MSG_WELCOME
+20:30:31 NatRecvMessage - NAT_MSG_HOST_INFO - UDP Port = 53152, TCP Port = 53784, UID = 125749976, Local IP = 7.126.202.216
+20:30:31 NatRecvMessage - NAT_MSG_ADD_USER - 125764021 - 7.127.1.181 - B5017F07
+20:30:32 NatRecvMessage - NAT_MSG_ADD_USER - 125759868 - 7.126.241.124 - 7CF17E07
+20:30:33 bind(0.0.0.0:0,s=864)
+20:30:33 closesocket(0.0.0.0:64073)
+20:30:33 dpnhupnp.dll::DirectPlayNATHelpCreate
+20:30:33 bind(0.0.0.0:2300,s=a04)
+20:30:33 closesocket(0.0.0.0:2300)
+20:30:33 bind(0.0.0.0:2300,s=a04)
+20:30:33 getsockname(s=a04, 0.0.0.0:2300)->0
+20:30:33 listen(0.0.0.0:2300)
+20:30:33 getsockname(s=a04, 0.0.0.0:2300)->0
+20:30:33 bind(0.0.0.0:0,s=a0c)
+20:30:33 sendto   (peer=7.127.1.181:47624,len=52,uid=125764021,saveId=0,local=7.126.202.216:18627,s=a0c)
+20:30:33 ...port is 2300
+20:30:33 ...overriding to 7.126.202.216
+20:30:33 closesocket(0.0.0.0:64074)
+20:30:33 listen(0.0.0.0:2300)
+20:30:33 bind(0.0.0.0:0,s=904)
+20:30:33 getsockname(s=904, 0.0.0.0:53786)->0
+20:30:33 closesocket(0.0.0.0:53786)
+20:30:33 bind(0.0.0.0:53786,s=904)
+20:30:33 connect(7.127.1.181:47624)
+20:30:33 ...redirect connect, destport = 47624, uid = 125764021
+20:30:33 send(127.0.0.1:53786, len=52, saveId=0)
+20:30:33 ...port is 2300
+20:30:33 ...overriding to 7.126.202.216
+20:30:33 closesocket(127.0.0.1:53786)
+20:31:36 closesocket(0.0.0.0:2300)

@@ -1,0 +1,5511 @@
+; ===========================VNS_Halen_ ARTIFICIAL INTELLIGENCE===============================
+
+; Ho Chi Minh City - Viet Nam, July 2004
+; AI VNS_Halen_ by VNS_None_ aka quoc383011
+; Email: quoc383011@yahoo.com or quoc383011@mail15.com
+
+
+
+; ##       ## ###   ##   ####          ##    ##      #      ##       ######## ###   ##
+;  ##     ##  ####  ## ###  ###        ##    ##     ###     ##       ##       ####  ##
+;   ##   ##   ## ## ##   ##	         ########    ## ##    ##       ######## ## ## ##
+;    ## ##    ##  ####     ##          ########   ##   ##   ##       ######## ##  ####
+;     ###     ##   ### ###  ###        ##    ##  #########  ######## ##       ##   ###
+;      #      ##    ##   ####   ###### ##    ## ##       ## ######## ######## ##    ## ######
+
+
+
+; THERE IS NO COPYRIGHT IN THIS SCRIPT !!! (because I got many ideas from other AIs)
+; So feel free if you'd like to use the code, although an acknowledgement of such use would
+; be appreciated.
+
+; SPECIAL THANKS: (in no particular order)
+
+;- xian xian for his infantry AIs : Boom, Azking (I learned a lot from them).
+
+;- babygalaxian aka VNS_Caesar, who encouraged me to write an AI. His AI TheBabyking proves
+; to be a great challenge, and his VNS_Caesar AI is even more aggressive than VNS_Halen_
+
+;- Tarkan_vn aka VNS_Tarkan for his suggestions about using Knights, and his AI: VNS_Tarkan 
+; (his AI has some cheats, but it’s strong).
+
+;- dqtln aka NguyenQuangTuan for his advices about using goals and timers, and his AI : the
+; VN-Game-Development-Team inspired me how to mix Melee units and Range units.
+
+;- attilathehunvn aka VNS_att (his KnightRush AI is a great sparring partner, though it has 
+; minor cheats).
+
+;- VNS_Paladin for testing my AIs and editing my VNS_Chris__ AI.
+
+;- hell_angel aka VNS_kid__ (my younger brother) for testing Cheats-Modes and suggestions.
+
+; And to the websites which gave me some inspirations: 
+;	http://aiscripters.com
+;	http://aok.heavengames.com
+;	http://vns-clan.com
+
+; ======================================VNS_Halen_ AI=========================================
+
+
+; ===========================NÓI CHUYE.N TIÉNG VIE.T TÍ CHÚT ^_^==============================
+
+; Các ba.n có thê su* du.ng các Source Code này dê xây du*ng hoa.c phát triên AI riêng cho ban
+; thân. Nhu*ng xin các ba.n su* dung nó vào các mu.c dích phi lo*i nhuan, và néu ba.n dã su*?
+; du.ng nó thì xin du*`ng thêm vào AI cua ba.n nhu*~ng dòng nhu*: "AI này dã dánh ba.i 2 AI 
+; VNS_Halen_, nó là AI ma.nh nhát..v.v.." hoa.c " tôi dã ta.o ra 1 AI cu*c ma.nh, dánh ba.i
+; ca? AI VNS_Chris__ và VNS_Halen_, ai không tin thì cú* mail cho tôi..v.v..".
+
+; Néu các ba.n muo'n ghi thì chi ca`n ghi "tôi có su* du.ng 1 só Source Code cua vài AI sau: 
+; TheBabyking, VNS_Chris__, VNS_Halen_,VNS_Tarkan ..." hoa.c "AI này dã duo.c test vói các AI
+; ma.nh nhu*: VNS_Halen_, VNS_Caesar, GoodBye, KnightRush, VN_Game_Development_Team...".
+
+; Trong AI này mình có ghi chú 1 só phàn, nhu*ng dèu ghi chú bàng Tiéng Anh, không phai muón
+; khoe trình do. ngoa.i ngu* hay muón giáu nghè, mà mu.c dích là dê? các Foreign Users có thê
+; do.c duo.c và tù dó góp ý cho mình. Nhu*ng câu Tíeng Anh dó khá do*n gian, mình tin là các
+; ba.n hoàn toàn có thê di.ch duo.c
+
+; Cuói cùng, xin các ba.n hãy hiê?u cho viêc su* du.ng cheats trong AI VNS_Halen_, mu.c dích
+; chính khi mình ta.o ra AI này là muón có 1 dói thu vùa tàm cho các ba.n yêu thích AOC có
+; dièu kie.n ta.p luyên. Mong muón cua mình là AI này se~ du? dô. khó dê? các ba.n không mau
+; chán, và cu~ng không quá khó de? các ba.n na?n chí, không dánh vói nó nua (vì da só gamers
+; thích dáu vói dói thu trình do. gàn bàng mình, ko ho*n nhièu mà cung không kém nhièu)
+
+; Mo.i ý kién , bình lua.n cua các ba.n xin go*i vè 1 trong 2 di.a chi mail nói trên, mình se~
+; tiép thu tát ca. Các ba.n cung có thê go*i bài review (or comment) lên dien dàn cua Viet Nam
+; Strategy Clan (www.vns-clan.com), cho mu.c AI files - Random Map - Scenario - Campaign...
+
+; ===============================CHÀO TÁT CA MO.I NGUÒI - GL HF===============================
+
+
+; ********************************************************************************************
+
+
+; ======================================DEFINE CONSTANTS======================================
+
+; goals (every goal has an indentifier and a value, it is used as a Flag to control AI)
+
+	(defconst GOAL-FIND-ENEMY 1)		;<-Using names for constants is better than numbers
+	(defconst GOAL-BE-FOUND 2)   		;  because it helps us "read" the script easily !
+	(defconst GOAL-RESEARCHING-FEUDAL 3); Consider you read your code and you read goal 7 or
+	(defconst GOAL-FAST-CASTLE 4)		; you read goal GOAL-RESEARCHING-CASTLE. What is more
+	(defconst GOAL-FIRST-RUSH 5)		; understandable ? Therefore I recommend it to all
+	(defconst GOAL-AGGRESSIVE-RUSH 6) 	; unexperienced scripters.
+	(defconst GOAL-AGGRESSIVE-ATTACK 7)		; And UpperCase is better than LowerCase 
+	(defconst GOAL-UNDER-ATTACK 8)	 
+	(defconst GOAL-DEFEND-FLUSH 9)		;<-- You can use CONSTANT for indentifier and
+	(defconst GOAL-DEFEND-CRUSH 10)		;  value of goals, timers... but I think there
+	(defconst GOAL-RESEARCHING-CASTLE  11)	; is no need to defconst Value : 0 and 1 is
+	(defconst GOAL-MASS-EAGLE 12)			; better than NO and YES, and if you defconst
+	(defconst GOAL-MASS-MONK 13)			; MAYBE or EXTREME or PROGRESSING, you can use
+	(defconst GOAL-MASS-SWORDMAN 14)		; -1, 2, 3... instead.
+	(defconst GOAL-RESEARCHING-IMPERIAL 15)
+	(defconst GOAL-ANTI-MM 16)		; However, the number of Goals for an AI is limited.
+	(defconst GOAL-ANTI-EAGLE 17)		; You can have NO MORE than 40 goals, it sometimes
+	(defconst GOAL-ANTI-KNIGHT 18)	; hurt. In that case, you can reduce some Goals. For
+	(defconst GOAL-ANTI-MONK 19)		; example: replace 3 goals by 1 goal with 3 value :
+	(defconst GOAL-ANTI-ARCHER 20)	; GOAL-RESEARCHING-FEUDAL, GOAL-RESEARCHING-CASTLE,
+	(defconst GOAL-ANTI-MESO 21)		; GOAL-RESEARCHING-IMPERIAL (which have 2 value 0 and 
+	(defconst GOAL-ANTI-GOTHIC 22)	; 1) can be replaced by GOAL-RESEARCHING-AGE, with 4
+	(defconst GOAL-ANTI-VIKING 23)	; certain values : 1, 2, 3, 4 and so on...
+	(defconst GOAL-HUMAN-PLAYER 24)	; <--this is cheat-mode flag
+	(defconst GOAL-CHEATS-NOW 25)		; <--this is supercheat-mode flag 
+	(defconst GOAL-GOOD-GAME 26)		; <--flag for resigning
+
+; timers (timer is similarly to goal in defconsting and usage, but different on effects)
+
+	(defconst TIMER-AGGRESSIVE-RUSH 1)	;<--timers is a good way to arrange actions
+	(defconst TIMER-AGGRESSIVE-ATTACK 2);    they are called Best Friend of Goals ^^
+	(defconst TIMER-UNDER-ATTACK 3)	; Use names (indentifiers) for timers similarly for 
+	(defconst TIMER-DEFEND-FLUSH 4)  	; goals, it looks a bit embarrasing but it's useful
+	(defconst TIMER-DEFEND-CRUSH 5)
+	(defconst TIMER-FIRST-RUSH 6)		; And here is a limit again: an AI
+	(defconst TIMER-FAST-CASTLE 7)	; can USE NO MORE than 10 different
+	(defconst TIMER-DOUBLE-RAID 8)	; timers in a game.
+	(defconst TIMER-GOOD-GAME 9)
+	(defconst TIMER-CHEATS-NOW 10)
+
+; ====================================INITIALIZE SOME VALUE===================================
+
+; set goals at the beginning (set the initial value for every goals, this is neccessary)
+(defrule
+	(true)
+=>
+	(set-goal GOAL-RESEARCHING-FEUDAL 0) 	;<--using value 0 and 1 is simple but effective
+	(set-goal GOAL-FAST-CASTLE 0)   		;   that's best values for goals, I think.
+	(set-goal GOAL-RESEARCHING-CASTLE 0)
+	(set-goal GOAL-FIRST-RUSH 0)			; the AI works only with Rules, and there is
+	(set-goal GOAL-AGGRESSIVE-ATTACK 0)		; nothing beyond rules. Again: The AI is simply
+	(set-goal GOAL-UNDER-ATTACK 0)		; a lot of Rules. What is a Rule ? Look :
+	(set-goal GOAL-AGGRESSIVE-RUSH 0)	;  (defrule			; <==> if
+	(set-goal GOAL-BE-FOUND 0)		; (here is a fact)	; <==> fact is true
+	(set-goal GOAL-DEFEND-FLUSH 0)	;  =>				; <==> then
+	(set-goal GOAL-DEFEND-CRUSH 0)	; (here is an action)	; <==> do action
+	(set-goal GOAL-FIND-ENEMY 0)		;  )				; <==> end rule	
+	(set-goal GOAL-RESEARCHING-IMPERIAL 0)	; Every rule can not have a limit of Total of
+	(set-goal GOAL-GOOD-GAME 0)			; facts and rules. Remember it or you will meet
+	(disable-self)					; "Rule too long" Error.
+)
+(defrule
+	(true)
+=>
+	(set-goal GOAL-ANTI-ARCHER 0) 	;<--seperate the actions "set-goal" into different 
+	(set-goal GOAL-ANTI-KNIGHT 0)  	;     rules to avoid "Rule's too long" error 
+	(set-goal GOAL-ANTI-MM 0)     	;       and to distinguish them easier
+	(set-goal GOAL-ANTI-EAGLE 0)
+	(set-goal GOAL-MASS-EAGLE 0)		; You'd better know the LIMIT of number of rules
+	(set-goal GOAL-MASS-MONK 0)		; in a .per file. It's 999 . But I think you won't
+	(set-goal GOAL-MASS-SWORDMAN 0)	; get problem with this limit til you are a master
+	(set-goal GOAL-ANTI-MESO 0)		; of the technique of AI programming. However,
+	(set-goal GOAL-ANTI-GOTHIC 0)		; technical mastery is only necessary, but not
+	(set-goal GOAL-ANTI-VIKING 0)		; sufficent to be a master of AI
+	(set-goal GOAL-HUMAN-PLAYER 0)
+	(set-goal GOAL-CHEATS-NOW 0)
+	(disable-self)
+)
+
+#load-if-not-defined DEATH-MATCH  		;<--this is Conditional Loading
+(defrule
+	(not 	(civ-selected viking)) 		; Conditional Loading allows you to load only 
+	(not	(civ-selected hun))    		; rules that fit particular game setting
+=>
+	(set-goal GOAL-GOOD-GAME 1) 		;<--resign in next 20s
+	(disable-timer TIMER-GOOD-GAME ) 	;    by using timer
+	(enable-timer TIMER-GOOD-GAME 20) 	;<--disable-timer and enable-timer should be together
+	(chat-to-all "101 Sorry, I wanna play Vikings or Huns ")
+	(chat-to-all " Please select civ VIKINGS or HUNS and restart ")
+	(disable-self)
+)
+
+(defrule
+	(not	(death-match-game))
+	(unit-type-count-total trebuchet < 4) ;<--packed trebuchet, not unpack one
+	(unit-type-count-total 42 < 4) 	;<--Every Item can be replaced with its "ID number"
+	(wood-amount > 400) 		; Every relative operator ">", "<", "==", "!=", "<=", ">="
+	(can-train trebuchet) 		; can be replaced by "greater-than", "less-than", "equal"..
+	(or	(soldier-count >= 40)   ;<- usage of logical operator OR :  (or (fact1) (fact2) )
+		(and	(players-military-population every-enemy <= 20)
+			(military-population >= 30)))
+	(or	(research-completed ri-champion)
+		(research-completed ri-halberdier))
+=>
+	(train trebuchet)			;<--can use "build trebuchet" here, it's an amazing trick
+)
+
+(defrule
+	(unit-type-count-total battering-ram-line < 7)
+	(or	(soldier-count > 35)				;<-- F1 OR F2 :  (or (F1) (F2))
+		(or	(players-building-type-count any-enemy castle > 0)
+			(or	(unit-type-count-total knight-line > 16)
+				(players-military-population any-enemy < 18))))
+	(nand	(players-current-age every-enemy == imperial-age)
+		(players-military-population every-enemy > 45))
+	(can-train battering-ram-line)
+=>
+	(train battering-ram-line)
+)
+#end-if
+
+#load-if-defined DEATH-MATCH ;<--others are: REGICIDE, WONDER-RACE, DEFEND-WONDER, SCENARIO...
+(defrule
+	(not	(civ-selected hun)) 	;<--others are: aztec, byzantine, briton, celtic, chinese 
+	(not	(civ-selected gothic)) 	; frankish, japanese, korean, mongol, persian, saracen, 
+=>						; spanish, teutonic, turkish, viking
+	(set-goal GOAL-GOOD-GAME 1) 
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)				;<--resign in next 20s
+	(chat-to-all "101 Sorry, I'd like to play Goths or Huns ")
+	(chat-to-all " Please select civ GOTHS or HUNS and restart ")
+	(disable-self) ;<--if you forget this, the AI will say "Sorry...restart" serially (+_+)
+)
+(defrule
+	(game-time > 5)
+=>
+	(set-strategic-number sn-special-attack-type1 barracks)	;<--attack military units
+	(set-strategic-number sn-special-attack-type2 barracks)	;  before attack villagers,
+	(set-strategic-number sn-special-attack-type3 barracks)	;  sieges and buildings
+	(disable-self)
+)
+(defrule
+	(soldier-count > 20)
+=>
+	(set-strategic-number sn-special-attack-type1 barracks)
+	(set-strategic-number sn-special-attack-type2 barracks)
+	(set-strategic-number sn-special-attack-type3 barracks)
+	(set-strategic-number sn-group-form-distance 20) 	;<--value small to make big group
+)
+(defrule 
+   	(game-time < 300) 
+=>
+   	(set-strategic-number sn-cap-civilian-builders 99) 	;<-- hehe, more builders !
+   	(set-strategic-number sn-cap-civilian-gatherers 1)
+)
+(defrule
+	(game-time > 5)
+=>
+	(set-strategic-number sn-food-gatherer-percentage 0)
+	(set-strategic-number sn-wood-gatherer-percentage 0)
+	(set-strategic-number sn-gold-gatherer-percentage 105) ;<-- I like 105% (^_^)
+	(set-strategic-number sn-stone-gatherer-percentage 0)
+	(chat-to-all "7 Set 0F 0W 105G 0S ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count villager > 20)
+=>
+	(set-strategic-number sn-food-gatherer-percentage 35)
+	(set-strategic-number sn-gold-gatherer-percentage 65)	;<-- 100% for better result
+	(chat-to-all "7 Set 35F 0W 65G 0S ")
+	(disable-self)
+)
+(defrule
+	(wood-amount < 2500)
+	(cc-players-unit-type-count 0 66 > 0)			;<-- there's still gold mine
+=>
+	(set-strategic-number sn-wood-gatherer-percentage 30)
+	(set-strategic-number sn-gold-gatherer-percentage 35)
+	(chat-to-all "7 Set 35F 30W 35G 0S ")
+	(disable-self)
+)
+(defrule
+	(cc-players-unit-type-count 0 66 < 1)			;<-- no gold mine
+=>
+	(set-strategic-number sn-wood-gatherer-percentage 35)
+	(set-strategic-number sn-stone-gatherer-percentage 30)
+	(chat-to-all "7 Set 35F 35W 0G 30S ")
+	(disable-self)
+)
+(defrule
+	(cc-players-unit-type-count 0 102 < 4)			;<-- no gold mine
+=>
+	(set-strategic-number sn-food-gatherer-percentage 56)
+	(set-strategic-number sn-wood-gatherer-percentage 35)
+	(set-strategic-number sn-stone-gatherer-percentage 14)
+	(chat-to-all "7 Set 56F 35W 0G 14S ")			;<-- 105% ^^
+	(disable-self)
+)
+
+(defrule
+	(or	(building-type-count-total barracks > 5)
+		(game-time > 1200))
+=>
+	(set-strategic-number sn-maximum-town-size 26)		;<-- you can't build anything if
+	(set-strategic-number sn-camp-max-distance 80)		; the maximum-town-size is too tiny
+	(set-strategic-number sn-mill-max-distance 50)		;<-- a small Camp-max-distance can
+	(disable-self)							; prevent you from building camps
+)
+(defrule
+	(game-time > 1600)
+=>
+	(set-strategic-number sn-maximum-town-size 30)		; but if the maximum-distance is
+	(set-strategic-number sn-camp-max-distance 150)		; too high, the AI will build camp
+	(set-strategic-number sn-mill-max-distance 60)		; and building too far to defense.
+	(disable-self)
+)
+(defrule
+	(game-time > 2000)
+=>
+	(set-strategic-number sn-maximum-town-size 35)	;<-- So you must increase it step by step
+	(set-strategic-number sn-camp-max-distance 200)	;<--Long distance to fix bug "idle vils"  
+	(set-strategic-number sn-mill-max-distance 70)	;   when nearby resources are out of run
+	(disable-self)
+)
+(defrule
+	(game-time > 2500)
+=>
+	(set-strategic-number sn-maximum-town-size 40)
+	(set-strategic-number sn-camp-max-distance 240)	; ditto 
+	(set-strategic-number sn-mill-max-distance 80)
+	(disable-self)
+)
+(defrule
+	(game-time > 3000)
+=>
+	(set-strategic-number sn-maximum-town-size 44)
+	(set-strategic-number sn-camp-max-distance 280) ; ditto
+	(set-strategic-number sn-mill-max-distance 90)
+	(disable-self)
+)
+(defrule
+	(game-time > 3500)
+=>
+	(set-strategic-number sn-maximum-town-size 48)
+	(set-strategic-number sn-camp-max-distance 320) ; ditto
+	(set-strategic-number sn-mill-max-distance 100)
+	(disable-self)
+)
+(defrule
+	(game-time > 4000)
+=>
+	(set-strategic-number sn-maximum-town-size 52)
+	(set-strategic-number sn-camp-max-distance 360) ; ditto
+	(set-strategic-number sn-mill-max-distance 110)
+	(disable-self)
+)
+(defrule
+	(game-time > 4500)
+=>
+	(set-strategic-number sn-maximum-town-size 56)
+	(set-strategic-number sn-camp-max-distance 400) ; ditto
+	(set-strategic-number sn-mill-max-distance 120)
+	(disable-self)
+)
+
+(defrule
+	(military-population > 1)
+	(goal GOAL-FIND-ENEMY 0)
+=>
+	(chat-to-allies " where's my enemy ? ")
+	(set-strategic-number sn-number-explore-groups 3)	;<--fast exploring for relics
+	(disable-self)
+)
+(defrule
+	(building-type-count-total monastery >= 2)
+=>
+	(set-strategic-number sn-number-explore-groups 1)	;<--return from exploring
+	(disable-self)
+)
+
+(defrule
+	(housing-headroom < 35)
+	(building-type-count house < 50)
+	(can-build house)
+=>
+	(build house)
+)
+
+(defrule
+	(building-type-count-total barracks > 4)
+	(building-type-count-total mill == 0)
+	(resource-found food)
+	(can-build mill)
+=>
+	(build mill)
+)
+
+(defrule
+	(or	(building-type-count-total castle > 2)
+		(military-population > 80))
+	(can-build market)
+	(or	(building-type-count market < 1)
+		(and	(players-building-type-count any-ally market > 0)
+			(building-type-count market < 2)))
+=>
+	(build market)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total monastery > 0)
+	(building-type-count-total barracks >= 3)
+	(resource-found gold)
+	(can-build mining-camp)
+=>
+	(build mining-camp)
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total monastery > 0)
+	(building-type-count-total barracks >= 5)
+	(resource-found wood)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total monastery > 0)
+	(building-type-count-total barracks >= 7)
+	(resource-found stone)
+	(can-build mining-camp)
+=>
+	(build mining-camp)
+)
+
+#load-if-defined GOTHS-CIV ;<--look in CPSB for more system-symbol CIV
+(defrule
+	(wood-amount > 900)
+	(building-type-count barracks < 12) ;<--building-type-count != building-type-count-total
+	(can-build barracks)			; Using them carelessly can cause fatal effects
+=>
+	(build barracks)
+)
+(defrule
+	(wood-amount > 900)
+	(building-type-count-total barracks < 12) 
+	(can-build barracks)
+=>
+	(build barracks)
+)
+(defrule
+	(resource-found wood)
+	(building-type-count town-center < 4)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+(defrule
+	(building-type-count monastery < 2)
+	(can-build monastery)
+=>
+	(build monastery) 			;<--to take relics As Soon As Possible
+)
+(defrule
+	(resource-found gold)
+	(building-type-count town-center < 4)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+(defrule
+	(resource-found stone)
+	(can-build town-center)
+	(building-type-count town-center < 4)
+=>
+	(build town-center)
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total siege-workshop < 2)
+	(can-build siege-workshop)
+=>
+	(build siege-workshop)
+)
+(defrule
+	(current-age >= castle-age)
+	(can-build castle)
+=>
+	(build castle)
+)
+
+(defrule
+	(wood-amount > 100)
+	(building-type-count-total barracks > 3)
+	(idle-farm-count < 7)
+	(building-type-count-total farm < 54)
+	(can-build farm)
+=>
+	(build farm)
+)
+(defrule
+	(soldier-count < 160)
+	(can-train spearman-line)
+=>
+	(train spearman-line)
+)
+(defrule
+	(soldier-count < 160)
+	(can-train militiaman-line)
+=>
+	(train militiaman-line)
+)
+(defrule
+	(can-train bombard-cannon)
+	(unit-type-count-total bombard-cannon < 24)
+=>
+	(train bombard-cannon) 			;<--support infantry more effectively than trebuchet
+)
+(defrule
+	(unit-type-count-total bombard-cannon > 18 )
+	(or	(players-civ any-enemy korean) 		;<--enemy's bombard-towers get 8+5 Range
+		(or	(players-civ any-enemy turkish) 	;<--ditto
+			(players-civ any-enemy teutonic))) 	;<--enemy's castles get 8+5 Range
+	(unit-type-count-total trebuchet < 4)
+	(unit-type-count-total 42 < 2)
+	(can-train trebuchet)
+=>
+	(train trebuchet)
+)
+#end-if
+#load-if-defined HUN-CIV
+(defrule	
+	(building-type-count stable < 6)
+	(can-build stable)
+=>
+	(build stable)
+)
+(defrule
+	(building-type-count barracks < 8)
+	(can-build barracks)
+=>
+	(build barracks)
+)
+(defrule
+	(building-type-count archery-range < 8)
+	(can-build archery-range)
+=>
+	(build archery-range)
+)
+
+(defrule
+	(building-type-count town-center < 4)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+(defrule
+	(building-type-count monastery < 2)
+	(can-build monastery)
+=>
+	(build monastery)
+)
+(defrule
+	(building-type-count castle < 8)
+	(can-build castle)
+=>
+	(build castle)
+)
+(defrule
+	(building-type-count-total town-center < 4)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+
+(defrule
+	(wood-amount > 100)
+	(building-type-count-total barracks > 3)
+	(building-type-count-total farm < 56)
+	(can-build farm)
+=>
+	(build farm)
+)
+(defrule
+	(building-type-count-total barracks > 3)
+	(building-type-count-total farm < 60)
+	(wood-amount >= 100)
+	(idle-farm-count < 1)
+	(can-build farm)
+=>
+	(build farm)
+)
+
+(defrule
+	(military-population > 50)
+	(players-military-population any-enemy < 30)
+	(can-train battering-ram-line)
+	(unit-type-count-total battering-ram-line < 8)
+=>
+	(train battering-ram-line)
+)
+(defrule
+	(or	(soldier-count >= 40)
+		(unit-type-count-total knight-line >= 20))
+	(unit-type-count-total trebuchet < 4)
+	(unit-type-count-total 42 < 4)
+	(can-train trebuchet)
+=>
+	(train trebuchet)
+)
+
+(defrule
+	(or	(unit-type-count-total cavalry-archer-line < 40)	;<- Huns is overpowered in
+		(and	(unit-type-count-total cavalry-archer-line < 60); Death Match AIs-war , and
+			(players-military-population any-enemy > 20)))	; their Cavalry Archers are
+	(can-train cavalry-archer-line)					; crazy like Hell !
+=>
+	(train cavalry-archer-line)
+)
+
+#end-if ;<--end Hun-civ loading
+
+(defrule
+	(building-type-count-total siege-workshop < 2)
+	(or	(military-population > 100)
+		(building-type-count-total castle > 3))
+	(can-build siege-workshop)
+=>
+	(build siege-workshop)
+)
+(defrule
+	(building-type-count-total siege-workshop < 4)
+	(military-population > 60)
+	(players-military-population any-enemy < 30)
+	(can-build siege-workshop)
+=>
+	(build-forward siege-workshop)
+)
+
+#end-if ;<--end DeathMatch loading
+
+; ===============================RESEARCH (The Key for Good Economy)==========================
+
+(defrule
+	(can-research ri-loom)
+	(or	(not (can-train villager))
+		(unit-type-count-total villager > 12))
+=>
+	(research ri-loom)
+	(disable-self)			;<--it's not necessary to use this action for Research
+)
+
+(defrule
+	(current-age == dark-age)
+	(can-research feudal-age)
+=>
+	(research feudal-age)
+	(set-goal GOAL-RESEARCHING-FEUDAL 1)
+	(disable-self)			;<--but I use some "disable-self" for carefulness ^^
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 0)
+	(current-age >= feudal-age)
+	(can-research ri-double-bit-axe)
+=>
+	(research ri-double-bit-axe)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(goal GOAL-HUMAN-PLAYER 1)
+			(research-completed ri-chain-barding)))
+	(can-research ri-town-watch)
+=>
+	(research ri-town-watch)
+)
+
+(defrule
+	(unit-type-count-total villager >= 18)
+	(can-research ri-wheel-barrow)
+=>
+	(research ri-wheel-barrow)
+)
+(defrule
+	(current-age == feudal-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(building-type-count-total archery-range >= 1))
+	(can-research ri-horse-collar)
+=>
+	(research ri-horse-collar)
+)
+(defrule
+	(current-age >= feudal-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(unit-type-count-total skirmisher-line > 5)
+			(or	(unit-type-count-total archer-line > 5)
+				(unit-type-count-total cavalry-archer-line > 5))))
+	(can-research ri-fletching)
+=>
+	(research ri-fletching)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 0)
+	(unit-type-count-total spearman-line >= 4)
+	(can-research ri-scale-mail)
+=>
+	(research ri-scale-mail)
+)
+(defrule
+	(current-age >= feudal-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(unit-type-count-total archer-line >= 5)
+			(unit-type-count-total skirmisher-line >= 5)))
+	(can-research ri-padded-archer-armor)
+=>
+	(research ri-padded-archer-armor)
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 0)
+	(can-research ri-gold-mining)
+=>
+	(research ri-gold-mining)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(can-research castle-age)
+=>
+	(research castle-age)
+	(set-goal GOAL-RESEARCHING-CASTLE 1)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(goal GOAL-RESEARCHING-CASTLE 1))
+	(can-research ri-forging)
+=>
+	(research ri-forging)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(goal GOAL-RESEARCHING-CASTLE 1))
+	(can-research ri-scale-barding)
+=>
+	(research ri-scale-barding)
+)
+
+(defrule
+	(current-age >= feudal-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(goal GOAL-RESEARCHING-CASTLE 1))
+	(can-research ri-bloodlines)
+=> 	
+	(research ri-bloodlines)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(goal	GOAL-ANTI-MM 1)
+			(unit-type-count-total skirmisher-line >= 6)))
+	(can-research ri-elite-skirmisher)
+=>
+	(research ri-elite-skirmisher)
+	(disable-self)
+)
+(defrule
+	(current-age >= castle-age)
+	(or	(goal GOAL-ANTI-KNIGHT 1)
+		(and	(goal GOAL-ANTI-EAGLE 0)
+			(goal GOAL-ANTI-MM 0)))
+	(can-research ri-pikeman)
+=>
+	(research ri-pikeman)
+	(disable-self)
+)
+; lumber-camp
+(defrule
+	(can-research ri-bow-saw)
+=>
+	(research ri-bow-saw)					;<-- ASAP: wood is life ^^
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(unit-type-count-total cavalry-archer-line > 7)
+			(or	(unit-type-count-total skirmisher-line > 12)
+				(or	(unit-type-count-total archer-line > 10)
+					(research-completed ri-elite-skirmisher)))))
+	(can-research ri-leather-archer-armor)
+=>
+	(research ri-leather-archer-armor)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(or	(goal GOAL-HUMAN-PLAYER 0)
+		(research-completed ri-gold-shaft-mining))
+	(or	(unit-type-count-total spearman-line > 21)
+		(or	(unit-type-count-total skirmisher-line > 15)
+			(goal GOAL-CHEATS-NOW 1)))
+	(not	(town-under-attack))
+	(can-research ri-squires)
+=>
+	(research ri-squires)
+)
+; economic
+(defrule
+	(can-research ri-hand-cart)
+=>
+	(research ri-hand-cart)
+)
+(defrule
+	(can-research ri-gold-shaft-mining)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(not	(town-under-attack)))
+=>
+	(research ri-gold-shaft-mining)
+)
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(not	(town-under-attack)))
+	(can-research ri-heavy-plow)
+=>
+	(research ri-heavy-plow)
+)
+(defrule
+	(current-age >= castle-age)
+	(research-completed ri-pikeman)
+	(research-completed ri-heavy-plow)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-squires)
+			(research-completed ri-gold-shaft-mining)))
+	(can-research ri-stone-mining)
+=>
+	(research ri-stone-mining)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-paladin)
+			(research-completed my-unique-unit-upgrade)))
+	(can-research ri-stone-shaft-mining)
+	(goal GOAL-FIRST-RUSH 0)
+=>
+	(research ri-stone-shaft-mining)
+)
+
+; blacksmith
+(defrule
+	(current-age >= castle-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(goal GOAL-ANTI-MONK 1)
+			(or	(unit-type-count-total cavalry-archer-line > 9)
+				(or	(unit-type-count-total skirmisher-line > 15)
+					(or	(unit-type-count-total archer-line > 12)
+						(research-completed ri-leather-archer-armor))))))
+	(can-research ri-bodkin-arrow)
+=>
+	(research ri-bodkin-arrow)
+)
+
+(defrule
+	(or	(unit-type-count-total knight-line > 3)
+		(or	(goal GOAL-CHEATS-NOW 1)
+			(research-completed ri-leather-archer-armor)))
+	(can-research ri-chain-barding)
+=>
+	(research ri-chain-barding)
+)
+
+(defrule
+	(or	(unit-type-count-total knight-line > 5)
+		(or	(unit-type-count-total spearman-line > 21)
+			(or	(goal GOAL-CHEATS-NOW 1)
+				(research-completed ri-pikeman))))
+	(research-completed ri-hand-cart)
+	(can-research ri-iron-casting)
+=>
+	(research ri-iron-casting)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(and	(research-completed ri-pikeman)
+			(or	(unit-type-count-total spearman-line >= 25)
+				(or	(research-completed ri-bodkin-arrow)
+					(research-completed ri-chain-barding)))))
+	(research-completed ri-hand-cart)
+	(can-research ri-chain-mail)
+=>
+	(research ri-chain-mail)
+)
+; research ri-pikeman and ri-elite-skirmisher again
+(defrule
+	(current-age >= castle-age)
+	(food-amount > 250)
+	(gold-amount > 200)
+	(or	(unit-type-count-total knight-line > 10)
+		(or	(unit-type-count-total spearman-line > 4)
+			(soldier-count > 15)))
+	(can-research ri-pikeman)
+=>
+	(research ri-pikeman)
+)
+(defrule
+	(current-age >= castle-age)
+	(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+		(goal GOAL-ANTI-ARCHER 1))
+	(can-research ri-elite-skirmisher)
+=>
+	(research ri-elite-skirmisher)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(or	(unit-type-count-total skirmisher-line > 32)
+		(or	(unit-type-count-total spearman-line > 25)
+			(military-population > 70)))
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(goal GOAL-HUMAN-PLAYER 1))
+	(can-research ri-light-cavalry)
+=>
+	(research ri-light-cavalry)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(can-research ri-husbandry)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+			(unit-type-count-total cavalry-archer-line >= 10)))
+=> 	
+	(research ri-husbandry)
+ 	(disable-self)
+)
+
+(defrule
+	(can-research imperial-age)					; Trying to Research next Age is
+	(goal GOAL-AGGRESSIVE-RUSH 1)					; the most popular habit of newbies
+=>										; That is really a risk if you do
+	(research imperial-age)						; not have more military than your
+	(set-goal GOAL-RESEARCHING-IMPERIAL 1)			; enemy. Experienced players can
+	(disable-self)							; defeat you easily if you do that
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(current-age > castle-age)
+			(goal GOAL-RESEARCHING-IMPERIAL 1)))
+	(can-research ri-man-at-arms)
+=>
+	(research ri-man-at-arms)
+)
+(defrule
+	(or	(goal	GOAL-CHEATS-NOW 1)
+		(or	(current-age >= imperial-age)
+			(goal GOAL-RESEARCHING-IMPERIAL 1)))
+	(can-research ri-long-swordsman)
+=>
+	(research ri-long-swordsman)
+)
+
+(defrule
+	(can-research ri-halberdier)			;<--The AI-Edit has some bugs, and you can see
+=>								; one here: it doesn't accept "ri-halberdier",
+	(research ri-halberdier)			; whereas the GameEngine does.
+)
+(defrule 
+	(can-research ri-two-handed-swordsman)
+=>
+	(research ri-two-handed-swordsman)
+)
+(defrule 
+	(can-research ri-champion)			;<--Champion is rox in Imperial Age, because
+=>								;  they are cheap gold-unit and they overpower 
+	(research ri-champion)				;  any non-gold-unit. Use them as soon as you
+)								;  get at Imperial Age
+
+(defrule
+	(can-research ri-crop-rotation)
+=>
+	(research ri-crop-rotation)
+)
+
+(defrule
+	(unit-type-count-total knight-line > 6)
+	(can-research ri-cavalier)
+=> 	
+	(research ri-cavalier)
+ 	(disable-self)
+)
+(defrule
+	(or	(research-completed ri-halberdier)
+		(unit-type-count-total knight-line > 8))	;<--paladin is RoX but you must have tons
+	(can-research ri-paladin)				; of gold to make a reasonable number of 
+=> 									; paladins. You'd rather use champions 
+	(research ri-paladin)					; than paladins in 1v1 or 2v2. But in a
+	(chat-to-all "21 Nice town, I'll take it ! ")	; 4vs4 game, when you have many Trade 
+ 	(disable-self)						; units, you will see Paladins' power ^^
+)
+
+; castle
+(defrule
+	(can-research ri-conscription)
+=>
+	(research ri-conscription)
+)
+(defrule
+	(not	(civ-selected hun))
+	(not	(civ-selected frankish))
+	(not	(civ-selected teutonic))
+	(not	(civ-selected celtic))
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-halberdier)
+			(research-completed ri-champion)))
+	(can-research my-unique-unit-upgrade) 	;<--instead of "ri-elite-..."
+=> 	
+	(research my-unique-unit-upgrade)
+)
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-paladin)
+			(research-completed my-unique-unit-upgrade)))
+	(can-research my-unique-research) 		;<--it represents for "ri-flower-war..."
+=> 	
+	(research my-unique-research)
+)
+
+(defrule
+	(or	(research-completed ri-paladin)
+		(research-completed my-unique-unit-upgrade))
+	(players-population every-enemy <= 5)
+	(can-research 408)				;<--ID number of spies/treason 
+=> 	
+	(research 408)
+	(chat-to-all "29 ARE YOU READY TO DIE !!! ")
+	(disable-self)
+)
+
+; blacksmith
+
+(defrule
+	(or	(unit-type-count-total skirmisher-line > 20)
+		(or	(unit-type-count-total archer-line > 15)
+			(unit-type-count-total cavalry-archer-line > 12)))
+	(can-research ri-bracer)
+=>
+	(research ri-bracer)
+)
+(defrule
+	(can-research ri-blast-furnace)
+=>
+	(research ri-blast-furnace)
+)
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-champion)
+			(research-completed ri-halberdier)))
+	(can-research ri-plate-mail)
+=>
+	(research ri-plate-mail)
+)
+
+(defrule
+	(or	(unit-type-count-total skirmisher-line > 20)
+		(or	(unit-type-count-total archer-line > 15)
+			(unit-type-count-total cavalry-archer-line > 12)))
+	(or	(research-completed ri-halberdier)
+		(research-completed ri-champion))
+	(can-research ri-thumb-ring)
+=>
+	(research ri-thumb-ring)
+)
+
+(defrule
+	(or	(research-completed ri-halberdier)
+		(research-completed ri-champion))
+	(or	(unit-type-count-total skirmisher-line > 20)
+		(or	(unit-type-count-total archer-line > 15)
+			(unit-type-count-total cavalry-archer-line > 12)))
+	(can-research ri-ring-archer-armor)
+=>
+	(research ri-ring-archer-armor)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(unit-type-count-total knight-line > 20)
+			(or	(research-completed my-unique-unit-upgrade)
+				(or	(research-completed ri-capped-ram)
+					(research-completed ri-paladin)))))
+	(can-research ri-plate-barding)
+=>
+	(research ri-plate-barding)
+)
+
+(defrule
+	(or	(research-completed ri-paladin)
+		(research-completed my-unique-research))		;<--heavy-CA is rather strong, but
+	(can-research ri-heavy-cavalry-archer)			; they are vulnerable to Elite 
+=> 										; Skirms. And not so good versus
+	(research ri-heavy-cavalry-archer)				; Halberdier. If you're not the 
+	(chat-to-all "21 Nice town, I'll take it ! ")		; Huns, don't use it in Imperial
+	(disable-self)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(unit-type-count-total archer-line > 14)
+			(or	(and	(unit-type-count-total archer-line > 7)
+					(unit-type-count-total skirmisher-line < 10))
+				(and	(research-completed ri-ring-archer-armor)
+					(gold-amount > 1200)))))
+	(can-research ri-crossbow)
+=>
+	(research ri-crossbow)
+)
+
+(defrule
+	(current-age >= imperial-age)
+	(not	(research-available ri-paladin))
+	(or	(research-completed ri-champion)
+		(unit-type-count-total archer-line > 16))
+	(can-research ri-arbalest)
+	(or	(gold-amount > 1500)
+		(goal GOAL-ANTI-EAGLE 1))
+=>
+	(research ri-arbalest)
+)
+
+(defrule
+	(research-completed ri-plate-mail)
+	(or	(research-completed ri-champion)
+		(research-completed ri-halberdier))
+	(can-research ri-capped-ram)
+=> 	
+	(research ri-capped-ram)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-champion)
+			(research-completed ri-halberdier)))
+	(can-research ri-tracking)
+=>
+	(research ri-tracking)
+)
+
+; university
+(defrule 
+	(can-research ri-ballistics)
+	(or	(goal	GOAL-CHEATS-NOW 1)
+		(or	(unit-type-count-total skirmisher-line > 18)
+			(or	(unit-type-count-total archer-line > 12)
+				(unit-type-count-total cavalry-archer-line > 9))))
+=>
+	(research ri-ballistics)
+)
+(defrule
+	(can-research ri-chemistry)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(unit-type-count-total skirmisher-line > 20)
+			(or	(unit-type-count-total archer-line > 15)
+				(unit-type-count-total cavalry-archer-line > 12))))
+=> 	
+	(research ri-chemistry)
+)
+(defrule 
+	(current-age >= castle-age)
+	(building-type-count-total castle >= 1)
+	(research-completed ri-hand-cart)
+ 	(can-research ri-murder-holes)
+=> 	
+	(research ri-murder-holes)
+)
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(players-population any-enemy < 5)
+			(unit-type-count-total knight-line > 25)))
+	(or	(research-completed ri-halberdier)
+		(research-completed ri-champion))
+	(can-research ri-stonecutting) 	;<--treatmill-crane
+=> 	
+	(research ri-stonecutting)
+)
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed my-unique-unit-upgrade)
+			(research-completed ri-paladin)))
+	(can-research ri-masonry)
+=> 	
+	(research ri-masonry)
+)
+(defrule
+	(or	(goal	GOAL-CHEATS-NOW 1)
+		(or	(research-completed my-unique-unit-upgrade)
+			(research-completed ri-paladin)))
+	(can-research ri-architecture)
+=> 	
+	(research ri-architecture)
+)
+(defrule
+	(or	(research-completed my-unique-unit-upgrade)
+		(or	(goal GOAL-CHEATS-NOW 1)
+			(research-completed ri-paladin)))
+	(can-research ri-siege-engineers)
+=> 	
+	(research ri-siege-engineers)
+)
+; market
+(defrule
+	(can-research ri-cartography)
+	(players-building-type-count any-ally market >= 1)
+	(research-completed ri-pikeman)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(goal GOAL-RESEARCHING-IMPERIAL 1))
+=>
+	(research ri-cartography)
+)
+(defrule
+	(research-completed ri-cartography)
+	(can-research ri-coinage)
+	(players-building-type-count any-ally market >= 1)
+	(goal GOAL-RESEARCHING-IMPERIAL 1)
+=>
+	(research ri-coinage)
+)
+(defrule
+	(research-completed my-unique-research)
+	(can-research ri-banking)
+	(players-building-type-count any-ally market >= 1)
+=>
+	(research ri-banking)
+)
+
+(defrule
+	(unit-type-count-total trade-cart > 3)
+	(can-research ri-caravan)
+=>
+	(research ri-caravan)
+)
+(defrule
+	(unit-type-count-total trade-cart >= 8)
+	(can-research ri-guilds)
+=>
+	(research ri-guilds)
+)
+; monastery
+(defrule	
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(unit-type-count monk >= 3))
+	(can-research ri-sanctity)
+=> 	
+	(research ri-sanctity)
+ 	(disable-self)
+)
+(defrule 	
+	(or	(gold-amount > 1000)
+		(research-completed my-unique-research))
+	(unit-type-count monk >= 2)
+	(can-research ri-fervor)
+=>	
+	(research ri-fervor)
+ 	(disable-self)
+)
+(defrule 	
+	(or	(gold-amount > 1100)
+		(research-completed my-unique-research))
+	(can-research ri-illumination)
+=> 		
+	(research ri-illumination)
+	(disable-self)
+)
+(defrule 	
+	(or	(gold-amount > 1100)
+		(research-completed my-unique-research))
+	(can-research ri-block-printing)
+=>		
+	(research ri-block-printing)
+ 	(disable-self)
+)
+(defrule 	
+	(or	(gold-amount > 1100)
+		(research-completed my-unique-research))
+	(unit-type-count monk > 2)
+	(can-research ri-redemption)
+=> 	
+	(research ri-redemption)
+	(disable-self)
+)
+(defrule 
+	(or	(gold-amount > 1100)
+		(research-completed my-unique-research))
+	(unit-type-count monk > 2)
+	(can-research ri-theocracy)
+=>		
+	(research ri-theocracy)
+ 	(disable-self)
+)
+(defrule 	
+	(research-completed my-unique-research)
+	(gold-amount > 1400)
+	(or	(research-completed ri-paladin)
+		(research-completed ri-champion))
+	(can-research ri-faith)
+=>		
+	(research ri-faith)
+	(disable-self)
+)
+(defrule 	
+	(research-completed my-unique-research)
+	(gold-amount > 1500)
+	(or	(research-completed ri-paladin)
+		(research-completed ri-champion))
+	(can-research ri-heresy)
+=>	 	
+	(research ri-heresy)
+	(disable-self)
+)
+; siege-workshop
+(defrule
+	(research-completed my-unique-research)
+	(or	(research-completed ri-champion)
+		(research-completed ri-paladin))
+	(can-research ri-siege-ram)
+=> 	
+	(research ri-siege-ram)
+)
+(defrule
+	(research-completed my-unique-research)
+	(or	(research-completed ri-champion)
+		(research-completed ri-paladin))
+	(can-research ri-onager)
+=> 	
+	(research ri-onager)
+)
+(defrule
+	(research-completed my-unique-research)
+	(or	(research-completed ri-champion)
+		(research-completed ri-paladin))
+	(can-research ri-siege-onager)
+=> 	
+	(research ri-siege-onager)
+)
+; less used things
+(defrule
+	(or	(research-completed ri-ring-archer-armor)
+		(research-completed ri-plate-mail))
+	(can-research ri-two-man-saw)
+=>
+	(research ri-two-man-saw)
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-paladin)
+			(research-completed my-unique-unit-upgrade)))
+	(can-research ri-town-patrol)
+=>
+	(research ri-town-patrol)
+)
+
+(defrule
+	(research-completed my-unique-research)
+	(or	(research-completed ri-champion)
+		(research-completed ri-paladin))
+	(can-research ri-hussar)
+=>
+	(research ri-hussar)
+)
+
+(defrule
+	(current-age >= imperial-age)
+	(research-completed ri-heavy-cavalry-archer)
+	(can-research ri-parthian-tactics)
+=>
+	(research ri-parthian-tactics)
+)
+; ======================================CHAT & TRIBUTE========================================
+
+; introduce - Inspired by dqtln
+(defrule
+	(unit-type-count-total villager > 4)
+=>
+	(chat-to-all " I am VNS_Halen_ AI by VNS_None_ ")
+	(chat-to-all " Email:   quoc383011@yahoo.com ")
+	(set-author-version " AI VNS_Halen_ ")		;<-- these "set-author" actions only
+	(set-author-name " VNS_None_ ")			; purpose appears to be documentation.
+	(set-author-email " quoc383011@yahoo.com ")	; The game does not use it for anything
+	(chat-to-allies " If you want to know my civil, click Alt+D (or Alt+T) " )
+	(chat-to-allies " I will make Archers ! Do you make Knights ? ")
+	(disable-self)
+)
+
+; say Asian's strategies : THE ART OF WAR - Inspired by xian_xian
+(defrule
+	(unit-type-count-total villager > 40)
+=>
+	(chat-to-all " Donkey's lips do not fit ")
+	(chat-to-all " onto a horse's mouth ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 45)
+=>
+	(chat-to-all " Add legs to the snake ")
+	(chat-to-all " after you have finished drawing it ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 50)
+=>
+	(chat-to-all " You can't catch a cub without ")
+	(chat-to-all " going into the tiger's den ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 55)
+=>
+	(chat-to-all " A sly rabbit will have ")
+	(chat-to-all " three openings to its den ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 60)
+=>
+	(chat-to-all " How can you expect to find ")
+	(chat-to-all " ivory in a dog's mouth ? ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 65)
+=>
+	(chat-to-all " It is easy to dodge a spear that comes in front of you but ")
+	(chat-to-all " hard to keep harms away from an arrow shot from behind ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 70)
+=>
+	(chat-to-all " Appear at points which the enemy must hasten to defend, ")
+	(chat-to-all " march swiftly to places where you are not expected ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 75)
+=>
+	(chat-to-all " Attack him where he is unprepared, ")
+	(chat-to-all " appear where you are not expected ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 80)
+=>
+	(chat-to-all " If he is secure at all points, be prepared for him ")
+	(chat-to-all " If he is in superior strength, evade him ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 85)
+=>
+	(chat-to-all " If he is taking his ease, give him no rest ")
+	(chat-to-all " If his forces are united, separate them ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 90)
+=>
+	(chat-to-all " Bring war material with you from home, but forage on the enemy ")
+	(chat-to-all " Thus the army will have food enough for its needs ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 95)
+=>
+	(chat-to-all " Three humble shoemakers brainstorming ")
+	(chat-to-all " will make a great statesman ")
+	(disable-self)
+)
+(defrule
+	(unit-type-count-total villager > 100)
+=>
+	(chat-to-all " You think you lost your horse ? Who knows, ")
+	(chat-to-all " he may bring a whole herd back to you someday ")
+	(disable-self)
+)
+(defrule
+	(game-time > 300)
+	(game-time < 600)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " In war, the way is to avoid what is strong ")
+	(chat-to-all " and to strike at what is weak ")
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 600)
+	(game-time < 900)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " Fail to steal the chicken ")
+	(chat-to-all " while it ate up your bait grain ")
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 900)
+	(game-time < 1200)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " Knowing the place and the time of the coming battle, ")
+	(chat-to-all " we may concentrate from the greatest distances in order to fight ")
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 1200)
+	(game-time < 1500)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " You think you lost your horse ? Who knows, ")
+	(chat-to-all " he may bring a whole herd back to you someday ")
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 1500)
+	(game-time < 1800)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " You won't help shoots grow ")
+	(chat-to-all " by pulling them up higher ")
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 1800)
+	(game-time < 2100)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " An inch of time is an inch of gold, but ")
+	(chat-to-all " you can't buy that inch of time with an inch of gold ")
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 2100)
+	(game-time < 2400)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " The onset of troops is like the rush of a torrent, ")
+	(chat-to-all " which will even roll stones along in its course ")
+	(acknowledge-taunt this-any-enemy 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 2400)
+	(game-time < 2700)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " If the campaign is protracted, the resources of the State ")
+	(chat-to-all " will not be equal to the strain ")
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 2700)
+	(game-time < 3000)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " Energy may be likened to the bending of a crossbow ")
+	(chat-to-all " Decision, to the releasing of a trigger ")
+	(acknowledge-taunt this-any-enemy 11)
+	(disable-self)
+)
+(defrule
+	(game-time > 3000)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " Only when all contribute their firewood ")
+	(chat-to-all " can they build up a strong fire ")
+	(acknowledge-taunt this-any-enemy 11)
+	(disable-self)
+)
+
+; resign
+(defrule
+	(building-type-count-total town-center == 0)
+	(not	(hold-relics))
+	(unit-type-count-total villager < 2)
+	(soldier-count < 2)
+	(players-population any-enemy >= 80)
+=>
+	(set-goal GOAL-GOOD-GAME 1)
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-allies "101 Sorry, I will resign ! " )
+	(chat-to-all "103 gg ! rematch ? ")
+	(chat-to-all " Chat 102 to me in next game ! You will see SUPER VNS_Halen_ ! ")
+	(disable-self)
+)
+(defrule
+	(timer-triggered TIMER-GOOD-GAME)
+	(goal GOAL-GOOD-GAME 1)
+=>
+	(release-escrow gold)
+	(release-escrow stone)
+	(release-escrow wood)
+	(release-escrow food)
+	(tribute-to-player any-ally gold 20000)
+	(tribute-to-player any-ally stone 20000)
+	(tribute-to-player any-ally wood 20000)
+	(tribute-to-player any-ally food 20000)
+	(disable-timer TIMER-GOOD-GAME)
+	(resign)
+	(disable-self)
+)
+; other chatting
+(defrule
+	(unit-type-count-total villager > 5)
+=>
+	(chat-to-all " Néu ba.n có zone-rating > 1550, hãy nha'n Enter và gõ 11 ")
+	(chat-to-all " If your zone-rating is > 1550, send taunt '11' to me in first 5 mins ")
+	(disable-self)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 0)
+	(unit-type-count-total villager > 9)
+=>
+	(chat-to-all " Néu ba.n muo'n AI na`y cho*i nhu* nguo`i, hãy ba'm Enter và gõ 11 ")
+	(chat-to-all " If you want me to play as Human, send taunt '11' to me in first 5 mins ")
+	(disable-self)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(unit-type-count-total villager > 9)
+=>
+	(chat-to-all " nice start here ")
+	(chat-to-all " good wood to defense :) ")
+	(disable-self)
+)
+(defrule
+	(or	(players-unit-type-count any-enemy 54 > 0)	;<--ID number of TC arrow is 54
+		(players-unit-type-count any-enemy 112 > 0))	;<--ID number of Range Unit's arrow
+=>
+	(chat-to-all " Don't point that thing at me :( ")
+	(chat-to-all "15 Ohh no, you're a bad guy ")
+	(disable-self)
+)
+(defrule
+	(players-current-age any-enemy <= feudal-age)
+	(players-unit-type-count any-enemy 54 > 0)
+	(unit-type-count-total scout-cavalry-line < 1)		;<--Scout was killed by TC arrows
+=>
+	(chat-to-all " Grr... you are ugly like hell ")
+	(chat-to-all "9 I will kick your ass    (*_*) ")
+	(disable-self)
+)
+(defrule
+	(game-time < 630)
+	(not	(death-match-game))
+	(players-current-age any-enemy >= feudal-age)
+=>
+	(chat-to-all " Ahh, Fast Feudal ! ")
+	(chat-to-all "7 TowerRush is no match for me    (~_~) ")
+	(disable-self)
+)
+(defrule
+    	(players-building-count any-enemy > 0)
+=>
+    	(chat-to-all " oh nice hill ")
+   	(chat-to-all "17 it's good ")
+	(set-goal GOAL-FIND-ENEMY 1)
+    	(disable-self)
+)
+(defrule
+	(or 	(players-unit-type-count any-enemy scout-cavalry-line > 0)
+		(players-unit-type-count any-enemy eagle-warrior-line > 0))
+=>
+	(chat-to-all " Ahh, nice exploring... ")
+	(chat-to-all "7 dont try steal sheep... its sux... ")
+	(set-goal GOAL-BE-FOUND 1)
+	(disable-self)
+)
+(defrule
+	(or	(players-population any-human > 48)
+		(players-population any-computer > 48))
+=>
+	(chat-to-all " your pop ? ")
+	(chat-to-all "42 I'm 48 now ^^ ")
+	(disable-self)
+)
+
+(defrule
+	(game-time > 300)								;<-- to delay in Death Match
+	(current-age >= castle-age)
+	(players-military-population any-enemy < 5)
+	(players-building-type-count any-enemy town-center <= 1)
+=>
+	(chat-to-all " It's time I took you out ")
+	(chat-to-all "23 Raiding party ! ")
+	(disable-self)
+)
+(defrule
+	(current-age >= castle-age)
+	(goal GOAL-AGGRESSIVE-ATTACK 1)
+	(soldier-count > 70)
+=>
+	(chat-to-all " Bawahahahaha... ")
+	(chat-to-all "11 gg ? ")
+	(disable-self)
+)
+(defrule
+	(population > 50)
+	(players-population any-enemy < 25)
+=>
+	(chat-to-all " Bawahahahaha... ")
+	(chat-to-all "11 You're too bad to play in World Cyber Game ! ")
+	(disable-self)
+)
+(defrule
+	(population > 60)
+	(players-population any-enemy < 18)
+=>
+	(chat-to-all " Hahahahahaa... ")
+	(chat-to-all "11 You're too rook ! ")
+	(disable-self)
+)
+(defrule
+	(population > 70)
+	(players-population any-enemy < 11)
+=>
+	(chat-to-all " Hahahahahaa... ")
+	(chat-to-all "11 A bad rookie ! ")
+	(disable-self)
+)
+(defrule
+	(population > 80)
+	(players-population any-enemy < 4)
+=>
+	(chat-to-all " Bawahahahahaha... ")
+	(chat-to-all "11 You need to practise more !!! ")
+	(disable-self)
+)
+
+(defrule
+	(population <= 18)
+	(players-population any-enemy > 30)
+=>	
+	(chat-to-all " Grr......  ")
+	(chat-to-all "9 It seems to be an unfair game :( ")
+	(disable-self)
+)
+(defrule
+	(population <= 13)
+	(players-population any-enemy > 35)
+=>
+	(chat-to-all " Hmm, you're really good ! ")
+	(chat-to-all "7 What is your max rate  (?_?) ")
+	(disable-self)
+)
+(defrule
+	(population <= 8)
+	(players-population any-enemy > 40)
+=>
+	(chat-to-all " Game over to me (>_<) ! Arrrrgggghhhh... ")
+	(chat-to-all "9 I won't resign !!! You must kill all of mine !!! ")
+	(disable-self)
+)
+(defrule
+	(population <= 4)
+	(players-population any-enemy > 50)
+=>
+	(chat-to-all " You're faster this game (+_+) ")
+	(chat-to-all "103 But next game I'll show you my true power ! ")
+	(disable-self)
+)
+; tributes to allies - Inspired by bari
+(defrule
+	(current-age >= castle-age)
+    	(players-current-age any-ally < imperial-age)
+    	(players-tribute any-ally food < 3000)
+    	(or	(food-amount >= 1500)
+		(and	(food-amount > 1200)
+			(commodity-selling-price food < 17)))
+=>
+    	(tribute-to-player this-any-ally food 500)
+)
+(defrule
+	(game-time > 3000)
+    	(players-tribute any-ally food < 5000)
+    	(or	(food-amount >= 1700)
+		(and	(food-amount > 1300)
+			(commodity-selling-price food <= 14)))
+=>
+    	(tribute-to-player this-any-ally food 600)
+)
+(defrule
+    	(current-age == imperial-age)      
+    	(players-current-age any-ally <= feudal-age)
+    	(food-amount >= 500)
+=>
+    	(tribute-to-player this-any-ally food 500)
+)
+(defrule
+    	(taunt-detected any-ally 3)
+    	(building-type-count market > 0)
+    	(or	(food-amount >= 1200)
+		(and	(food-amount > 1100)
+			(commodity-selling-price food < 17)))
+=>
+    	(tribute-to-player this-any-ally food 300)
+    	(acknowledge-taunt this-any-ally 3)
+)
+(defrule
+    	(taunt-detected any-ally 3)
+    	(building-type-count market > 0)
+    	(food-amount <= 1100)
+    	(food-amount >= 900)
+=>
+    	(tribute-to-player this-any-ally food 200)
+    	(acknowledge-taunt this-any-ally 3)
+)
+(defrule
+    	(taunt-detected any-ally 3)
+    	(building-type-count market > 0)
+    	(food-amount < 900)
+    	(food-amount >= 600)
+=>
+    	(tribute-to-player this-any-ally food 100)
+    	(acknowledge-taunt this-any-ally 3)
+)
+
+(defrule
+	(current-age >= castle-age)     
+    	(players-current-age any-ally < imperial-age)
+    	(players-tribute any-ally wood < 3000)
+    	(or	(wood-amount >= 1300)
+		(and	(wood-amount > 1100)
+			(commodity-selling-price wood <= 17)))
+=>
+    	(tribute-to-player this-any-ally wood 300)
+)
+(defrule
+	(game-time > 3000)
+    	(players-tribute any-ally wood < 5000)
+    	(or	(wood-amount >= 1500)
+		(and	(wood-amount > 1200)
+			(commodity-selling-price wood <= 17)))
+=>
+    	(tribute-to-player this-any-ally wood 400)
+)
+(defrule
+    	(current-age == imperial-age)
+    	(players-current-age any-ally <= feudal-age)
+    	(wood-amount >= 600)
+=>
+    	(tribute-to-player this-any-ally wood 400)
+)
+(defrule
+    	(taunt-detected any-ally 4)
+    	(building-type-count market > 0)
+    	(or	(wood-amount >= 1100)
+		(and	(wood-amount > 900)
+			(commodity-selling-price wood < 17)))
+=>
+    	(tribute-to-player this-any-ally wood 500)
+    	(acknowledge-taunt this-any-ally 4)
+)
+(defrule
+    	(taunt-detected any-ally 4)
+    	(building-type-count market > 0)
+    	(food-amount <= 900)
+    	(food-amount >= 700)
+=>
+    	(tribute-to-player this-any-ally wood 400)
+    	(acknowledge-taunt this-any-ally 4)
+)
+(defrule
+    	(taunt-detected any-ally 4)
+    	(building-type-count market > 0)
+    	(food-amount < 700)
+    	(food-amount >= 500)
+=>
+    	(tribute-to-player this-any-ally wood 200)
+    	(acknowledge-taunt this-any-ally 4)
+)
+
+(defrule
+	(current-age >= castle-age)
+    	(players-current-age any-ally < imperial-age)
+    	(players-tribute any-ally gold < 3000)
+	(gold-amount >= 1600)
+=>
+    	(tribute-to-player this-any-ally gold 400)
+)
+(defrule
+	(game-time > 3000)
+    	(players-tribute any-ally gold < 5000)
+    	(gold-amount >= 1800)
+=>
+    	(tribute-to-player this-any-ally gold 500)
+)
+(defrule
+    	(current-age == imperial-age)
+    	(players-current-age any-ally <= feudal-age)
+    	(gold-amount >= 600)
+=>
+    	(tribute-to-player this-any-ally gold 300)
+)
+(defrule
+    	(taunt-detected any-ally 5)
+    	(building-type-count market > 0)
+    	(gold-amount >= 1100)
+=>
+    	(tribute-to-player this-any-ally gold 300)
+    	(acknowledge-taunt this-any-ally 5)
+)
+(defrule
+    	(taunt-detected any-ally 5)
+    	(building-type-count market > 0)
+    	(food-amount <= 1100)
+    	(food-amount >= 900)
+=>
+    	(tribute-to-player this-any-ally gold 200)
+    	(acknowledge-taunt this-any-ally 5)
+)
+(defrule
+    	(taunt-detected any-ally 5)
+    	(building-type-count market > 0)
+    	(food-amount < 900)
+    	(food-amount >= 700)
+=>
+    	(tribute-to-player this-any-ally gold 100)
+    	(acknowledge-taunt this-any-ally 5)
+)
+
+(defrule
+	(game-time > 3000)
+    	(players-tribute-memory any-ally stone < 2000)
+    	(players-building-type-count any-ally castle == 0)
+    	(stone-amount >= 1500)
+=>
+    	(tribute-to-player this-any-ally stone 500)
+)
+(defrule
+    	(taunt-detected any-ally 6)
+    	(building-type-count market > 0)
+	(stone-amount <= 450)
+    	(stone-amount >= 300)
+=>
+    	(tribute-to-player this-any-ally stone 100)
+    	(acknowledge-taunt this-any-ally 6)
+)
+(defrule
+    	(taunt-detected any-ally 6)
+    	(building-type-count market > 0)
+	(stone-amount > 450)
+=>
+    	(tribute-to-player this-any-ally stone 200)
+    	(acknowledge-taunt this-any-ally 6)
+)
+
+(defrule
+    	(current-age >= castle-age)
+    	(taunt-detected any-ally 38)
+    	(building-type-count market > 0)
+    	(wood-amount > 700)
+=>
+    	(tribute-to-player this-any-ally wood 300)
+    	(acknowledge-taunt this-any-ally 38)
+)
+(defrule
+    	(current-age >= castle-age)
+    	(taunt-detected any-ally 38)
+    	(building-type-count market > 0)
+    	(food-amount > 900)
+=>
+    	(tribute-to-player this-any-ally food 200)
+    	(acknowledge-taunt this-any-ally 38)
+)
+(defrule
+    	(current-age >= castle-age)
+    	(taunt-detected any-ally 38)
+    	(building-type-count market > 0)
+    	(gold-amount > 800)
+=>
+    	(tribute-to-player this-any-ally gold 200)
+    	(acknowledge-taunt this-any-ally 38)
+)
+; ask for tribute
+(defrule
+    	(current-age >= castle-age)
+    	(game-time >= 2400)
+    	(soldier-count < 10)
+    	(unit-type-count villager < 30)
+    	(food-amount < 200)
+=>
+    	(chat-to-allies "3 300 food ^_* ")
+    	(disable-self)
+)
+(defrule
+    	(current-age == feudal-age)
+    	(game-time >= 2400)
+    	(soldier-count < 10)
+    	(food-amount < 300)
+=>
+    	(chat-to-allies "3 300 food ^_* ")
+    	(disable-self)
+)
+
+(defrule
+    	(current-age >= castle-age)
+    	(soldier-count < 10)
+    	(unit-type-count villager < 20)
+    	(wood-amount < 200)
+    	(building-type-count-total town-center < 2)
+=>
+    	(chat-to-allies "4 300 wood ^_* ")
+    	(disable-self)
+)
+(defrule
+    	(current-age >= castle-age)
+    	(soldier-count < 10)
+    	(unit-type-count villager < 15)
+    	(wood-amount < 200)
+    	(building-type-count-total town-center < 2)
+=>
+    	(chat-to-allies "4 300 wood ^_* ")
+    	(disable-self)
+)
+(defrule
+    	(current-age >= castle-age)
+    	(soldier-count < 10)
+    	(players-military-population any-enemy >= 25)
+    	(food-amount >= 1000)
+    	(gold-amount < 200)
+=>
+    	(chat-to-allies "5 300 gold ^_* ")
+    	(disable-self)
+)
+
+(defrule
+    	(current-age >= castle-age)
+    	(soldier-count < 20)
+    	(unit-type-count villager < 30)
+    	(building-type-count-total town-center < 2)
+=>
+    	(chat-to-allies "38 anything ^_* ")
+    	(disable-self)
+)
+; thanks to allies
+(defrule
+    	(players-tribute-memory any-ally food > 0)
+=>
+    	(chat-to-allies "108 thx ")
+    	(clear-tribute-memory this-any-ally food)
+)
+(defrule
+    	(players-tribute-memory any-ally gold > 0)
+=>
+    	(chat-to-allies "108 thx ")
+    	(clear-tribute-memory this-any-ally gold)
+)
+(defrule
+    	(players-tribute-memory any-ally wood > 0)
+=>
+    	(chat-to-allies "108 thx ")
+    	(clear-tribute-memory this-any-ally wood)
+)
+(defrule
+    	(players-tribute-memory any-ally stone > 0)
+=>
+    	(chat-to-allies "108 thx ")
+    	(clear-tribute-memory this-any-ally stone)
+)
+
+(defrule
+	(goal GOAL-UNDER-ATTACK 1)
+	(soldier-count <= 5)
+=>
+	(chat-to-allies "107 Help me ")
+	(enable-timer TIMER-DEFEND-CRUSH 50)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-UNDER-ATTACK 1)
+	(soldier-count <= 5)
+	(timer-triggered TIMER-DEFEND-CRUSH)
+=>
+	(chat-to-allies "107 SOS, now or never ")
+	(disable-timer TIMER-DEFEND-CRUSH)
+	(enable-timer TIMER-DEFEND-CRUSH 50)
+)
+
+(defrule
+	(taunt-detected any-ally 36)
+	(town-under-attack)
+=>
+	(chat-to-allies " lolz ! Go to hell ! ")
+	(chat-to-allies "110 My town is under attack ! ")
+	(acknowledge-taunt this-any-ally 36)
+)
+(defrule
+	(taunt-detected any-ally 36)
+	(military-population < 30)
+	(not	(town-under-attack))
+=>
+	(chat-to-allies " Wait, man ! ")
+	(chat-to-allies "109 Flare where you want to attack ! ")
+	(acknowledge-taunt this-any-ally 36)
+)
+(defrule
+	(taunt-detected any-ally 36)
+	(military-population > 30)
+	(not	(town-under-attack))
+=>
+	(chat-to-allies " Yes, sir ! ")
+	(chat-to-allies "109 But you should Flare to attack ! ")
+	(acknowledge-taunt this-any-ally 36)
+)
+
+(defrule
+	(players-unit-type-count any-ally 274 >= 1)	;<-- ID of Flare (Alt+F)
+=>
+	(chat-to-allies " If you want me to attack, send taunt '31' ")
+	(chat-to-allies "1 If there is resource, take it ! Don't send to me ^^ ") 
+)
+
+(defrule
+	(taunt-detected any-ally 31)
+	(town-under-attack)
+=>
+	(chat-to-allies " Sorry, I won't attack now ! ")
+	(chat-to-allies "110 My town is under attack ! ")
+	(acknowledge-taunt this-any-ally 31)
+)
+(defrule
+	(taunt-detected any-ally 31)
+	(military-population < 30)
+	(not	(town-under-attack))
+=>
+	(chat-to-allies " Sorry, I won't attack now ! ")
+	(chat-to-allies "110 I haven't got enough military units ! ")
+	(acknowledge-taunt this-any-ally 31)
+)
+(defrule
+	(taunt-detected any-ally 31)
+	(military-population > 30)
+	(not	(town-under-attack))
+=>
+	(chat-to-allies " Yes, I will attack the nearest guy ! ")
+	(chat-to-allies "109 But after I finish researching this item ! ")
+	(acknowledge-taunt this-any-ally 31)
+)
+
+(defrule
+	(or	(taunt-detected any-enemy 42)
+		(taunt-detected any-ally 42))
+	(current-age == dark-age)
+=>
+	(chat-to-all " I am in Dark Age ")
+	(chat-to-all "104 But I'm still faster than you   :) ")
+	(acknowledge-taunt this-any-enemy 42)
+	(acknowledge-taunt this-any-ally 42)
+	(disable-self)
+)
+(defrule
+	(or	(taunt-detected any-enemy 42)
+		(taunt-detected any-ally 42))
+	(current-age == feudal-age)
+=>
+	(chat-to-all " I am in Feudal Age ")
+	(chat-to-all "105 You're too slow   :) ")
+	(acknowledge-taunt this-any-enemy 42)
+	(acknowledge-taunt this-any-ally 42)
+	(disable-self)
+)
+(defrule
+	(or	(taunt-detected any-enemy 42)
+		(taunt-detected any-ally 42))
+	(current-age == castle-age)
+=>
+	(chat-to-all " I am in Castle Age ")
+	(chat-to-all "106 It's time I show you my crazy booming ")
+	(chat-to-allies "31 Attack the losing enemy ")
+	(acknowledge-taunt this-any-enemy 42)
+	(acknowledge-taunt this-any-ally 42)
+	(disable-self)
+)
+(defrule
+	(or	(taunt-detected any-enemy 42)
+		(taunt-detected any-ally 42))
+	(current-age == imperial-age)
+=>
+	(chat-to-all " I am in Imperial Age ")
+	(chat-to-all "21 Nice town, I'll take it ! ")
+	(chat-to-allies "31 Attack the winning enemy ")
+	(acknowledge-taunt this-any-enemy 42)
+	(acknowledge-taunt this-any-ally 42)
+	(disable-self)
+)
+
+; ==========================================TRAIN=============================================
+
+; villager 
+(defrule
+	(current-age == dark-age)
+	(or	(unit-type-count-total villager < 27)	; which value (from 27 to 32) is best ?
+		(or	(and	(unit-type-count-total villager < 30)
+				(goal GOAL-ANTI-MESO 0))
+			(and	(unit-type-count-total villager < 32)
+				(goal GOAL-FAST-CASTLE 1))))
+	(can-train villager)
+=>
+	(train villager)
+)
+(defrule
+	(current-age == feudal-age)
+	(unit-type-count-total villager < 63)
+	(can-train villager)			 
+=>
+	(train villager)
+)
+(defrule							; If you want to Flood Eagle Warriors, you can 
+	(current-age == castle-age) 			; cease creating villager at pop 40->45 til you
+	(unit-type-count-total villager < 99)	; make a Mass Eagle Rush. If you want to defend
+	(can-train villager)				; and get to Imp-Age earlier to flood Champions
+=>								; you can cease creating villager at 70-75. But
+	(train villager)	 				; I think non-stop creating villager until 100 
+)								; vils is the best.  
+(defrule 							
+	(current-age == imperial-age)					; 100 vils make an strong economy 
+	(or	(unit-type-count-total villager < 98)		; and a Huge military in Castle Age
+		(and	(unit-type-count-total villager < 100)	; It's help you defeat enemies 
+			(soldier-count < 95)))				; trying to get quick Imperial as
+	(can-train villager)						; long as you use more than 2 Rams
+=>										; in your army and keep a good
+	(train villager)							; eco booming
+)
+(defrule
+	(current-age >= imperial-age)
+	(soldier-count > 95)
+	(unit-type-count-total villager > 100)
+	(or	(research-completed ri-paladin)
+		(or	(research-completed my-unique-unit-upgrade)
+			(unit-type-count 293 > 0)))			;<--ID of female idle villager
+=>
+	(delete-unit 293)					;<--kill idle-vils to make more military-units
+	(chat-to-all " delete idle-vils :) ")
+)
+
+; military units - Inspired by VNS_None_ :)  hehe, I will show my thought about them
+
+(defrule
+	(or	(hold-relics)
+		(unit-type-count-total skirmisher-line < 42))
+	(or	(current-age == castle-age)
+		(and	(gold-amount > 750)
+			(research-completed ri-cavalier)))	; Knight is the best Unit in Castle Age 
+	(not	(research-completed ri-halberdier))	; despite its cost. Knights can kill Range
+	(not	(research-completed ri-champion))	; Units easily, and they are stronger than
+	(can-train knight-line) 			; other melee units. However, if you use "pure"
+	(unit-type-count-total knight-line < 36)	; Knights vs their counter units such as Pikes,  
+=> 								; camels or even Eagles (or their mixed with
+	(train knight-line) 				; Knights), you will be outnumbered and run out 
+) 								; of gold
+(defrule
+	(not	(civ-selected gothic))			; So you MUST combo Knights with counter-Knight
+	(current-age > castle-age) 			; units when enemies use many Knights and mix
+	(can-train knight-line) 			; Knights with Range Units when enemies use 
+	(or	(research-completed ri-paladin) 	; many counter-Knight units. Use Knights and 
+		(gold-amount > 1200)) 			; you will be the EMPEROR of Castle Age
+	(unit-type-count-total knight-line < 50)	; Knights are RoX 
+=>								; Knights are RoX
+	(train knight-line)				; Knights are RoX
+)
+
+(defrule
+	(not	(civ-selected hun))				;<--Unique Unit is stronger than common 
+	(research-completed my-unique-unit-upgrade) 	; units, in general. But in 1v1 or 2v2
+	(gold-amount > 300) 					; seldom used. Because trying to build a 
+	(can-train my-unique-unit-line)			; Castle in early Castle Age is a risk.
+=> 									; enemy always attack in Castle Age, so 
+	(train my-unique-unit-line)				; you must have a large army to build  
+) 									; a Castle
+
+(defrule
+	(current-age <= feudal-age)
+	(players-current-age any-enemy <= feudal-age)
+	(goal GOAL-ANTI-MM 0)
+	(building-type-count-total blacksmith < 1)
+	(unit-type-count-total militiaman-line < 3)		;<--swordman is the only military
+	(unit-type-count-total skirmisher-line < 1) 		; in Dark Age so I creat some
+	(players-unit-type-count any-enemy archer-line < 3)	; swordmans to protect my base from
+	(can-train militiaman-line) 			  		; fast Attacks (DRush or TowerRush)
+=>
+	(train militiaman-line)
+)
+(defrule		
+	(research-completed ri-two-handed-swordsman)	; However, I use Swordsman lately since
+ 	(or	(research-completed ri-champion)		; they are the slowest in Feudal and they
+		(and	(not (death-match-game))		; are countered easily by Knights or
+			(civ-selected hun)))			; Cavalry Archers - the common units in
+	(can-train militiaman-line)			; Castle Age. So don't use it in Feudal unless
+	(soldier-count < 110) 				; you are Gothic-civ. Nevertheless, Champion is
+=> 								; very good in Imperial-Age because Swordman is
+	(train militiaman-line) 			; the strongest when lack of gold. Use them
+) 								; as soon as you get Imperial-Age
+
+(defrule
+	(current-age == feudal-age)					; Scout-cavalry is good to raid
+	(players-current-age any-enemy <= feudal-age)		; villagers. It's also good to 
+	(building-type-count-total market == 0)			; counter Skirmishers, Archers as
+	(goal GOAL-ANTI-GOTHIC 0)					; well as Siege Units. However, 80
+	(goal GOAL-ANTI-ARCHER 0)					; food is a bit expensive, because
+	(goal GOAL-ANTI-MM 0)						; the Scouts are weak vs other
+	(unit-type-count-total scout-cavalry-line < 5)		; units. On using Scouts you must
+	(can-train scout-cavalry-line) 				; mix them with strong Range Units
+=>			 							; or when you have tons of Food ^^
+ 	(train scout-cavalry-line)					
+)										
+(defrule
+	(current-age == castle-age)
+	(research-completed ri-light-cavalry)
+	(food-amount > 350)
+	(gold-amount < 70)
+	(commodity-selling-price food < 30)
+	(or	(unit-type-count-total skirmisher-line > 32)
+		(unit-type-count-total spearman-line > 25))
+	(can-train scout-cavalry-line)
+=>
+	(train scout-cavalry-line)			 		;<--to harass and raid enemies
+)
+(defrule
+	(not	(death-match-game))
+	(research-completed ri-hussar)
+	(food-amount > 1800)
+	(commodity-selling-price food < 20)
+	(can-train scout-cavalry-line)
+=>
+	(train scout-cavalry-line) 					;<--flood Hussar when out of gold
+)
+
+(defrule
+	(current-age == feudal-age)				; Spearman is weak , but they are better
+	(building-type-count-total stable < 3)		; than swordman to fight Mounted units.
+	(players-current-age any-enemy <= feudal-age)	; Because it is cheap and quickly-created
+	(goal GOAL-ANTI-MM 0) 					; you can useit to outnumber enemy's 
+	(goal GOAL-ANTI-EAGLE 0) 				; cavalry. It's also good to combo with 
+	(unit-type-count-total archer-line < 10)		; Archers or Knights
+	(or	(unit-type-count-total spearman-line < 9)
+		(and	(goal GOAL-ANTI-MESO 1)
+			(unit-type-count-total spearman-line < 5)))
+	(players-building-type-count any-enemy watch-tower-line < 3)
+	(can-train spearman-line)
+=>
+	(train spearman-line)
+)
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total stable < 3)
+	(or	(players-unit-type-count any-enemy knight-line > 1)		; because Meso-civs can 
+		(players-unit-type-count any-enemy scout-cavalry-line > 2))	; use Monks to convert
+	(goal GOAL-ANTI-MESO 0)								; my cavalries, these
+	(unit-type-count-total spearman-line < 12)				; facts are necessary.
+	(can-train spearman-line)
+	(nand	(goal GOAL-HUMAN-PLAYER 1)
+		(players-building-type-count any-enemy watch-tower-line > 2))
+=>
+	(train spearman-line)
+)
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-ANTI-KNIGHT 1)
+	(building-type-count-total stable <= 2)
+	(nand	(goal GOAL-HUMAN-PLAYER 1)
+		(players-building-type-count any-enemy watch-tower-line >= 2))
+	(players-unit-type-count any-enemy archer-line < 10)
+	(can-train spearman-line)						;<--these facts make more 
+	(or	(unit-type-count-total spearman-line < 16) 		; possibilities for the AI to
+		(and	(goal GOAL-RESEARCHING-CASTLE 0)     		; research ri-pikeman as soon
+			(unit-type-count-total spearman-line < 19))) 	; as he finish researching
+=>									 		; Castle-Age
+	(train spearman-line)
+)
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total stable <= 2)
+	(players-current-age any-enemy >= castle-age)
+	(goal	GOAL-ANTI-MESO 0)
+	(not	(players-civ every-enemy gothic))
+	(can-train spearman-line)
+	(or	(unit-type-count-total spearman-line < 16) 		;<--ditto
+		(and	(goal GOAL-RESEARCHING-CASTLE 0)     		; research ri-pike-man is
+			(unit-type-count-total spearman-line < 19))) 	; very important to counter
+=>											; mounted units. It's a waste
+	(train spearman-line)							; of resource to use spearman
+)											; to fight Knights
+(defrule 
+	(current-age == feudal-age)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(goal GOAL-ANTI-MM 0)
+	(goal GOAL-ANTI-EAGLE 0)
+	(wood-amount > 250)
+	(unit-type-count-total spearman-line < 21)
+	(or	(players-unit-type-count any-enemy cavalry-archer-line >= 10)	;<-- its ID = 936
+		(players-unit-type-count any-enemy knight-line > 8))	;<--creat more spearman 
+	(building-type-count-total stable <= 2)				; to outnumber enemy's army
+	(can-train spearman-line)						; My pikes will kill enemy's  
+=>											; knights, while my knights
+	(train spearman-line)							; are rotting out enemy's CA
+)
+
+(defrule
+	(current-age == castle-age)
+	(goal GOAL-ANTI-EAGLE 0)
+	(players-unit-type-count any-enemy archer-line < 15)
+	(research-completed ri-pikeman)						
+	(or	(goal GOAL-ANTI-MM 0)						; don't use pikeman
+		(unit-type-count-total skirmisher-line > 20))		; to against swordsman
+	(can-train spearman-line)						; because that's really 
+	(unit-type-count-total spearman-line < 50)			; a waste of resources
+=>
+	(train spearman-line)
+)
+(defrule
+	(current-age == castle-age)						;<--don't use pikeman when
+	(building-type-count-total town-center > 2)			; enemies has Eagles. You
+	(or	(goal GOAL-ANTI-MM 0)						; should mass Knights and 
+		(unit-type-count-total skirmisher-line > 25))		; combo with some Range Units
+	(research-completed ri-pikeman)					; The Range Units can "lure"
+	(players-unit-type-count every-enemy eagle-warrior-line < 5); Eagles so your Knights will
+	(unit-type-count-total spearman-line < 55)			; rock Eagles easier. Both 
+	(can-train spearman-line)						; Calvary Archer and Skirms
+=>											; can "lure" Eagles. But you 
+	(train spearman-line) 							; must have many Knights to 
+)											; beat Eagles. Swordmans with 
+(defrule										; large quantity and full
+	(current-age == castle-age)						; upgrade is another choice
+	(goal GOAL-RESEARCHING-IMPERIAL 1)
+	(food-amount > 900)
+	(gold-amount > 700)
+	(unit-type-count-total spearman-line < 60)
+	(can-train spearman-line)
+=>
+	(train spearman-line)
+)
+(defrule
+	(current-age == imperial-age)
+	(goal GOAL-ANTI-KNIGHT 1)
+	(players-unit-type-count any-enemy monk <= 7)
+	(or	(research-completed ri-halberdier)
+		(gold-amount < 90))
+	(unit-type-count-total spearman-line < 65)
+	(can-train spearman-line)
+=>
+	(train spearman-line)
+)
+(defrule
+	(current-age >= imperial-age)
+	(goal GOAL-AGGRESSIVE-ATTACK 1)
+	(food-amount > 100)
+	(gold-amount < 20)
+	(can-train spearman-line)
+	(unit-type-count-total spearman-line < 65) 	;<-mass Spearman-line when out of gold
+=>
+	(train spearman-line)
+)
+
+(defrule									; Archers are good vs Infantries
+	(current-age == feudal-age)					; (both Swordmans and Spearmans)
+	(building-type-count-total stable <= 2)			; but they are not so good to vs
+	(or	(unit-type-count-total militiaman-line > 1)	; others. You MUST mix archers with
+			(goal GOAL-ANTI-KNIGHT 0))			; some melee units, such as Scout
+	(goal GOAL-RESEARCHING-CASTLE 0)				; cavalries and Pikes. Archers and
+	(goal GOAL-ANTI-ARCHER 0)					; Knights is a better mixed when
+	(players-unit-type-count any-enemy monk < 1)		; you have lots of gold. Whereas
+	(unit-type-count-total archer-line < 28)			; Archers and Swordmans is a strong
+	(can-train archer-line) 					; combo in Imperial Age, when gold
+=>										; is running out. In Castle, you
+	(train archer-line)						; should not creat Archers because
+)										; they're weak vs Knights or Eagles
+(defrule
+	(current-age == feudal-age)					; They are fairly good to defense
+	(or	(goal GOAL-ANTI-MM 1)					; eagle if they outnumber enemies,
+		(and	(goal GOAL-HUMAN-PLAYER 1)			; and with the smart "hit and run".
+			(goal GOAL-ANTI-EAGLE 1)))			; Flush with M@A is not popular coz
+	(building-type-count-total stable < 2)			; M@A is sux vs Knight. But with
+	(or	(unit-type-count-total archer-line < 24)		; Gothic civ, their infantry is
+		(and	(unit-type-count-total archer-line < 32)	; extremely cheap (-35% cost), so
+			(goal GOAL-RESEARCHING-CASTLE 0)))		; an Gothic M@A Flush is deadly vs
+	(can-train archer-line)						; other Flushes and even CRush. And
+=>										; in Feudal, the best way to stop
+	(train archer-line)						; them is lots of Archers (Towers 
+)										; are too, but less effective)
+(defrule
+	(current-age == castle-age)
+	(not 	(civ-selected hun))
+	(goal GOAL-ANTI-EAGLE 1)
+	(goal GOAL-RESEARCHING-IMPERIAL 1)
+	(research-completed ri-crossbow)
+	(research-completed ri-bodkin-arrow)
+	(unit-type-count-total archer-line < 50)
+	(can-train archer-line)
+=>
+	(train archer-line)
+)
+
+(defrule
+	(current-age == castle-age)
+	(players-current-age any-enemy < imperial-age)
+	(building-type-count-total archery-range >= 2)
+	(or	(goal GOAL-HUMAN-PLAYER 1)
+		(or	(goal GOAL-ANTI-MM 1)
+			(civ-selected hun)))				; when enemies has researched	
+	(unit-type-count-total knight-line > 9)			; ri-pikeman or ri-long-swordman
+	(players-unit-type-count any-enemy spearman-line < 20); you Must have Range Units to
+	(building-type-count-total farm > 19)	   		; support your Knights. And Cavalry 
+	(unit-type-count-total cavalry-archer-line < 32)	; Archer is better than skirmisher   
+	(can-train cavalry-archer-line) 				; to counter Swordmans and Knights
+=>
+	(train cavalry-archer-line) 					;<--cool with "hit and run" 
+)
+(defrule
+	(current-age > castle-age)
+	(building-type-count-total archery-range > 2) 		; If you have many Cavalry Archers,
+	(unit-type-count-total cavalry-archer-line < 36) 	; you can take out any melee units
+	(or	(research-completed ri-heavy-cavalry-archer) 	; with "hit and run" no matter what
+		(goal GOAL-CHEATS-NOW 1))				; they are, except Huskarls of 
+	(can-train cavalry-archer-line)				; Goths and Paladins
+=>
+	(train cavalry-archer-line)
+)
+
+(defrule
+	(current-age == feudal-age)				; Like the pikeman, skirmisher-line is 
+	(building-type-count-total stable < 3)		; cheap and can be created quickly. Thus
+	(players-current-age any-enemy <= feudal-age)	; Elite-Skirmishers is the best choice
+	(goal GOAL-RESEARCHING-CASTLE 0)			; if enemies have many Archers or Cavalry
+	(food-amount > 50)					; Archers. Since an AI can "hit and run"
+	(can-train skirmisher-line)				; better than Human, you can use Elite-
+	(building-type-count-total archery-range >= 2) 	; Skirmishers to "lure" enemy's melee
+	(unit-type-count-total skirmisher-line < 10)	; units so that your Raiders (Knights
+=>									; or Eagles) can rock them easily. This
+	(train skirmisher-line)					; is a good way to beats enemies mixed,
+)									; eg: "CAs & Scouts" or "Archers & Pikes"
+(defrule
+	(current-age == feudal-age)			
+	(building-type-count-total stable <= 2)
+	(goal GOAL-ANTI-ARCHER 1)
+	(can-train skirmisher-line)						;<--these facts and actions
+	(or	(unit-type-count-total skirmisher-line < 24) 		; make more possibilities for
+		(and	(goal GOAL-RESEARCHING-CASTLE 0)       		; the AI to research Elite
+			(unit-type-count-total skirmisher-line < 28))) 	; Skirmisher as soon as he
+=>											; finish researching Castle
+	(train skirmisher-line)							; Age. This is very important
+)											; to defeat enemies' Archers
+
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(building-type-count-total stable <= 2)
+	(or	(players-unit-type-count any-enemy cavalry-archer-line > 4)
+		(or	(goal GOAL-ANTI-MM 1)
+			(players-unit-type-count any-enemy spearman-line > 7)))
+	(can-train skirmisher-line)
+	(unit-type-count-total skirmisher-line < 8)
+	(wood-amount > 400)
+=>
+	(train skirmisher-line)
+)
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(goal GOAL-ANTI-ARCHER 1)
+	(unit-type-count-total skirmisher-line >= 22)
+	(or	(unit-type-count-total skirmisher-line < 30)		; more skirms to outnumber
+		(and	(wood-amount > 400)					; enemy's army : My Elite  
+			(unit-type-count-total skirmisher-line < 32)))	; Skirms will kill enemy's CA
+	(building-type-count-total stable <= 2)				; while my knights're killing
+	(can-train skirmisher-line)						; enemy's Light Cavalries, 
+=>											; but notice to save wood to 
+	(train skirmisher-line)							; research elite skirmisher
+)									
+
+(defrule
+	(current-age == castle-age)
+	(research-completed ri-elite-skirmisher)				; Elite-skirmisher is the
+	(or	(goal GOAL-ANTI-ARCHER 1)					; best counter for all kinds
+		(and	(goal GOAL-ANTI-MM 1)	 				; of Archer and Cavalry
+			(or	(goal	GOAL-ANTI-GOTHIC 1)			; Archer. They have bonus +4
+				(goal GOAL-ANTI-MESO 1))))			; Attack and they're better
+	(can-train skirmisher-line) 						; than Knights and Eagles due
+	(or	(unit-type-count-total skirmisher-line < 60) 		; to their quick creation
+		(and	(unit-type-count-total spearman-line < 40)	; and cheap price.
+			(unit-type-count-total skirmisher-line < 70)))
+=>
+	(train skirmisher-line)
+)
+
+(defrule
+	(current-age >= imperial-age)
+	(research-completed ri-elite-skirmisher)
+	(or	(research-completed ri-champion)
+		(or	(research-completed ri-chemistry)
+			(goal GOAL-ANTI-ARCHER 1)))
+	(gold-amount < 250)
+	(can-train skirmisher-line)
+	(unit-type-count-total skirmisher-line < 75)	;<--mass Skirmisher-line when out of gold
+=>
+	(train skirmisher-line)
+)
+
+(defrule
+	(or	(unit-type-count-total monk < 4)
+		(and	(players-unit-type-count 0 285 > 1)	;<-- ID number of relic = 285	
+			(unit-type-count-total monk < 6)))	;<-- Monks is very important to an AI,
+	(current-age >= castle-age)				; especially on Land maps. If an AI does
+	(can-train monk)						; not use any monks, he will decrease his   
+=>									; possibilities for victory by 20% for
+	(train monk)						; relics and 5% for convertions and cures
+)
+
+; trade-cart 
+ (defrule
+	(current-age >= castle-age)			; Train Trade-Unit in team games if you achieve 
+	(or	(goal GOAL-RESEARCHING-IMPERIAL 1)	; Imperial Age. Trade-cart is an expensive unit
+		(commodity-selling-price food < 50)); and you shouldn't creat them until you have
+	(commodity-selling-price wood < 30) 	; a "big" military. However, in a 4vs4 game you
+	(wood-amount > 360)				; MUST train it sooner. Remember: don't use it
+	(players-building-type-count any-ally market >= 1) ; in Castle Age, and when you are in
+	(can-train trade-cart)				; Imperial Age you can train it faster by many
+	(unit-type-count-total trade-cart < 8) 	; Markets (I often use 4-7 Market in Imp Age)
+=>								; Trade-Units are most used in 4v4 because they 
+	(train trade-cart)				; are useful then. (much better than Relics)
+)
+(defrule
+	(current-age >= castle-age)					; more Trade-carts to get more Gold
+	(or	(goal GOAL-RESEARCHING-IMPERIAL 1)			; that's the KEY to keep creating 
+		(commodity-selling-price food < 30))		; Gold-units such as Paladins or 
+	(commodity-selling-price wood < 30)				; Elite Eagle Warriors in Imperial 
+	(wood-amount > 350)						; Age. At least you can keep 
+	(players-building-type-count any-ally market >= 1)	; pumping champions or Unique Units
+	(or	(research-completed ri-caravan)			; to flood enemies' base
+		(cc-players-unit-type-count 0 66 < 2))
+	(can-train trade-cart)
+	(unit-type-count-total trade-cart < 18)
+=>
+	(train trade-cart)
+)
+; siege
+(defrule
+	(not	(death-match-game))
+	(or	(players-building-type-count every-enemy stone-wall-line > 12)
+		(or	(players-unit-type-count any-enemy monk > 7)
+			(research-completed ri-elite-skirmisher)))
+	(can-train mangonel-line)
+	(unit-type-count-total mangonel-line < 3)
+	(players-unit-type-count any-enemy scout-cavalry-line < 6)
+	(players-unit-type-count any-enemy eagle-warrior-line < 5)
+	(players-unit-type-count any-enemy knight-line < 4)
+	(players-unit-type-count any-enemy militiaman-line < 9)
+	(building-type-count-total town-center >= 2)
+=>
+	(train mangonel-line)
+)
+
+; ===========================================BUILD============================================
+
+; wall - Inspired by Bari
+;(defrule
+;	(or	(goal GOAL-RESEARCHING-FEUDAL 1)
+;		(and	(goal GOAL-HUMAN-PLAYER 1)
+;			(military-population > 8)))
+;	(wall-completed-percentage 1 < 30)
+;	(wood-amount > 150)
+;	(building-type-count-total palisade-wall < 15)		;<--build some wall to slow down
+;	(can-build-wall 1 palisade-wall)				; enemies and detect their units
+;=>
+;	(build-wall 1 palisade-wall)
+;)
+;(defrule
+;	(wall-completed-percentage 1 >= 30)
+;	(wall-completed-percentage 1 < 50)
+;	(wood-amount > 200)
+;	(building-type-count-total palisade-wall < 25)		;<--ditto
+;	(can-build-wall 1 palisade-wall)
+;=>
+;	(build-wall 1 palisade-wall)
+;)
+
+; house
+#load-if-not-defined HUN-CIV
+(defrule
+	(current-age == dark-age)
+	(housing-headroom < 3)
+	(building-type-count-total house < 50)
+	(can-build-with-escrow house)			;<--this fact is better than (can-build house)
+=>
+	(build house)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(housing-headroom < 9)
+	(building-type-count-total house < 50)
+	(can-build-with-escrow house)			;<--this fact is better than (can-build house)
+=>
+	(build house)
+)
+
+(defrule
+	(current-age == castle-age)
+	(housing-headroom < 11)
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+	(building-type-count-total house < 50)
+	(can-build-with-escrow house)			;<--this fact is better than (can-build house)
+=>
+	(build house)
+)
+
+(defrule
+	(current-age == castle-age)
+	(housing-headroom < 20)
+	(building-type-count-total house < 50)
+	(can-build-with-escrow house)			;<--this fact is better than (can-build house)
+=>
+	(build house)
+)
+
+(defrule
+	(current-age >= imperial-age)
+	(wood-amount > 600)
+	(building-type-count-total house < 60)
+	(can-build-with-escrow house)			;<--this fact is better than (can-build house)
+=>
+	(build house)
+)
+; Yurt - Inspired by Archon
+(defrule								; A Yurts is a special kind of House, it
+	(unit-type-count-total villager > 25)		; costs 50 wood and takes more time to
+	(wood-amount > 900) 					; build. But it's useful to increase your
+	(or	(gold-amount > 1000)				; housing-headroom quickly. That's very 
+		(food-amount > 1100))				; important in DeathMatch, especially for
+	(building-type-count-total 713 < 1)			; non-Hun civs to fight the Huns. A yurt 
+=>									; is a house in Scenario. But we can use
+	(set-strategic-number sn-maximum-town-size 24)	; them in RM and DM if we know theirs ID
+	(build 713)							; number: 712, 713, 714,..., 719
+)
+(defrule
+	(wood-amount > 900)					;<-- Yurts which have ID from 713 -> 718
+	(or	(gold-amount > 1000)				; are same size with house (2x2 tiles)
+		(food-amount > 1100))				; but less hitpoints and need more time
+	(building-type-count-total 713 >= 1)		; to build.
+	(building-type-count-total 714 < 1)
+=>
+	(set-strategic-number sn-maximum-town-size 24)
+	(build 714)
+)
+(defrule
+	(wood-amount > 900)
+	(or	(gold-amount > 1000)
+		(food-amount > 1100))
+	(building-type-count-total 714 >= 1)		;<-- ditto
+	(building-type-count-total 715 < 1)
+=>
+	(set-strategic-number sn-maximum-town-size 24)
+	(build 715) 
+)
+(defrule
+	(wood-amount > 900)
+	(or	(gold-amount > 1000)
+		(food-amount > 1100))
+	(building-type-count-total 715 >= 1)		;<-- ditto
+	(building-type-count-total 716 < 1)
+=>
+	(set-strategic-number sn-maximum-town-size 24)
+	(build 716) 
+)
+(defrule
+	(wood-amount > 900)
+	(or	(gold-amount > 1000)
+		(food-amount > 1100))
+	(building-type-count-total 716 >= 1)		;<-- ditto
+	(building-type-count-total 717 < 1)
+=>
+	(set-strategic-number sn-maximum-town-size 24)
+	(build 717) 
+)
+(defrule
+	(wood-amount > 900)
+	(or	(gold-amount > 1000)
+		(food-amount > 1100))
+	(building-type-count-total 717 >= 1)		;<-- ditto
+	(building-type-count-total 718 < 1)
+=>
+	(set-strategic-number sn-maximum-town-size 24)
+	(build 718)
+)
+(defrule
+	(wood-amount > 900)
+	(or	(gold-amount > 1000)
+		(food-amount > 1100))
+	(building-type-count-total 718 >= 1)		;<--712 and 719 are big Yurts (3x3 Tiles)
+	(building-type-count-total 712 < 1)			; they are more hitpoints than house but
+=>									; take much more build-time
+	(set-strategic-number sn-maximum-town-size 24)
+	(build 712) 
+)
+
+(defrule
+	(wood-amount > 900)
+	(or	(gold-amount > 1000)
+		(food-amount > 1100))
+	(building-type-count-total 712 >= 1)		;<-- ditto
+	(building-type-count-total 719 < 1)
+=>
+	(set-strategic-number sn-maximum-town-size 24)
+	(build 719)
+)
+#end-if
+; town-center
+(defrule
+	(game-time > 45)
+	(building-type-count town-center < 1)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+; mill
+(defrule
+	(current-age == dark-age)				; Mill is useful for AIs to build farm
+	(building-type-count-total town-center > 0)	; because the farmer walk less distance.
+	(building-type-count-total mill == 0)		; Therefore build farm around mill take
+	(resource-found food)					; food faster than around TC. However,
+	(can-build mill)						; I prefer TC since their garrisoning, 
+=>									; which keep you vils away from enemies
+	(build mill)						; raiding. Otherwise, some smart AIs or
+)									; Human player can harass your mills and
+; another mill - Inspired by Bari				; you will get many idle vils and farms
+(defrule
+    	(building-type-count-total mill == 1)		;<-- 1 more mill for hunting deer
+    	(or	(unit-type-count 122 >= 1)   			;<-- male hunter's ID == 122
+      	(or	(unit-type-count 216 >= 1)		;<-- female hunter's ID == 216
+			(or	(unit-type-count 56 >= 1)	;<-- male fisherman's ID == 56
+				(unit-type-count 57 >= 1))))	;<-- female fisherman's ID == 57
+	(can-build mill)
+=>
+    	(set-strategic-number sn-mill-max-distance 32)	;<-- mill-distance == hunt-distance + 11
+    	(build mill)
+    	(set-strategic-number sn-maximum-hunt-drop-distance 10)	;<--to hunt nearest deers
+    	(disable-self)
+)
+
+; lumber-camp
+
+;(defrule 								;<-- this is a method to find the correct
+;	(true)							; place for first lumber camp. It's not
+;=> 									; 100% effective, however, it increase
+;	(set-strategic-number sn-camp-max-distance 4) 	; the chance to 85% ability. It " scan "
+;	(set-strategic-number sn-mill-max-distance 28)	; the wood (tree) by increasing camp-max
+;	(disable-self)						; -distance step by step (looks like TSA)
+;)
+;(defrule 								; This method comes from the Dragon Game
+;	(strategic-number sn-camp-max-distance == 4) 	; Design Network (htt://www.dgdn.net)
+;	(game-time < 3)						; And I was inspired this method by
+;	(resource-found wood) 					; Tea315 (Leo), a HongKong guy.
+;=>
+;	(set-strategic-number sn-camp-max-distance 12)
+;	(chat-to-all "3 lumber-camp-distance 12")
+;)
+;(defrule 
+;	(strategic-number sn-camp-max-distance == 4)
+;	(game-time < 5)
+;	(resource-found wood)
+;=> 
+;	(set-strategic-number sn-camp-max-distance 18)
+;	(chat-to-all "3 lumber-camp-distance 18 ")
+;)
+;(defrule
+;	(strategic-number sn-camp-max-distance == 4)
+;	(game-time < 8 )
+;	(resource-found wood)
+;=> 
+;	(set-strategic-number sn-camp-max-distance 22)
+;	(chat-to-all "3 lumber-camp distance 22 ")
+;)
+;(defrule 
+;	(strategic-number sn-camp-max-distance == 4)
+;	(game-time > 7)
+;	(resource-found wood)
+;=>
+;	(set-strategic-number sn-camp-max-distance 22)
+;	(chat-local-to-self "3 lumber-camp-distance 22 ")
+;)
+
+(defrule
+	(current-age == dark-age)
+	(or	(difficulty < hard)			;<-- this mean (difficulty == hardest)
+		(or	(goal	GOAL-CHEATS-NOW 1)
+			(or	(building-type-count-total town-center == 0)
+				(unit-type-count-total villager > 10))))
+	(or	(building-type-count-total mill > 0)
+		(wood-amount < 375))
+	(building-type-count-total lumber-camp == 0)
+	(resource-found wood)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+(defrule
+	(not	(death-match-game))
+	(current-age != dark-age)
+	(building-type-count-total lumber-camp == 0)		;<--rebuild if destroyed
+	(resource-found wood)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+(defrule
+	(current-age == dark-age)
+	(building-type-count-total lumber-camp < 2)
+	(building-type-count-total farm > 2)
+	(resource-found wood)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total archery-range > 1)
+	(or	(wood-amount > 300)
+		(dropsite-min-distance wood >= 3)) 			;<--look, this is important
+	(building-type-count-total lumber-camp < 6)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total archery-range > 1)
+	(or	(wood-amount > 550)
+		(and	(wood-amount > 400)
+			(dropsite-min-distance wood >= 3)))		;<--look, this is important
+	(building-type-count-total lumber-camp < 7)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+
+; mining-camp
+(defrule
+	(goal GOAL-HUMAN-PLAYER 0)
+	(current-age == feudal-age)
+	(resource-found gold)
+	(or	(building-type-count-total archery-range > 1)
+		(goal GOAL-CHEATS-NOW 1))
+	(building-type-count-total mining-camp == 0)
+	(can-build mining-camp)	
+=>
+	(build mining-camp)
+	(set-strategic-number sn-food-gatherer-percentage 40)
+	(set-strategic-number sn-wood-gatherer-percentage 45)
+	(set-strategic-number sn-gold-gatherer-percentage 15)
+)
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total mining-camp <= 2)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(building-type-count-total market > 0))
+	(resource-found gold)
+	(can-build mining-camp)
+=>
+	(build mining-camp)
+)
+
+; dark age farm
+(defrule
+	(not 	(goal GOAL-RESEARCHING-FEUDAL 1))
+	(current-age == dark-age)
+	(unit-type-count-total villager >= 15)
+	(building-type-count-total lumber-camp > 0)
+	(building-type-count-total mill > 0)
+	(idle-farm-count < 1) 
+	(can-build farm)
+=>
+	(build farm)
+)
+(defrule
+	(goal GOAL-RESEARCHING-FEUDAL 1)
+	(current-age == dark-age)
+	(building-type-count-total lumber-camp > 0)
+	(building-type-count-total barracks > 0)
+	(idle-farm-count < 1)
+	(wood-amount >= 150)
+	(can-build farm)
+=>
+	(build farm)
+)
+; feudal building
+(defrule
+	(goal GOAL-HUMAN-PLAYER 0)
+	(or	(goal GOAL-RESEARCHING-FEUDAL 1)
+		(goal GOAL-CHEATS-NOW 1))
+	(building-type-count-total barracks < 1)
+	(can-build barracks)
+=>
+	(build barracks)
+)
+(defrule
+	(not	(death-match-game))
+	(goal GOAL-HUMAN-PLAYER 0)
+	(current-age != dark-age)
+	(building-type-count-total archery-range < 2)
+	(can-build archery-range)
+=>
+	(build archery-range)
+)
+(defrule
+	(not	(death-match-game))
+	(goal GOAL-HUMAN-PLAYER 0)
+	(current-age != dark-age)
+	(building-type-count-total stable < 1)
+	(can-build stable)
+=>
+	(build stable)
+)
+
+(defrule
+	(not	(death-match-game))
+	(current-age != dark-age)
+	(building-type-count-total lumber-camp >= 1)
+    	(building-type-count-total blacksmith == 0)
+	(soldier-count > 5)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(building-type-count-total archery-range > 1))
+	(can-build blacksmith)
+=>
+	(build blacksmith)
+	(disable-self)
+)
+(defrule
+	(not	(death-match-game))
+	(current-age != dark-age)
+	(building-type-count-total lumber-camp >= 1)
+	(building-type-count-total market > 0)
+	(building-type-count-total barracks > 1)
+	(building-type-count-total blacksmith == 0)
+	(can-build blacksmith)
+=>
+	(build blacksmith)
+)
+(defrule
+	(not	(death-match-game))
+	(building-type-count-total market > 0)
+	(or	(difficulty < hard)				;<-- this mean (difficulty == hardest)
+		(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+			(goal GOAL-CHEATS-NOW 1)))
+	(wood-amount > 600)
+	(building-type-count-total blacksmith < 2)
+	(can-build blacksmith)
+=>
+	(build blacksmith)
+)
+
+(defrule
+	(current-age >= feudal-age)
+	(building-type-count-total market == 0)
+	(building-type-count-total archery-range > 1)
+    	(building-type-count-total blacksmith > 0)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(soldier-count >= 10)
+			(gold-amount > 200)))
+	(wood-amount >= 200)
+	(can-build-with-escrow market)	;<-- this fact is better than (can-build market)
+=>
+	(build market)
+)
+(defrule
+	(current-age >= feudal-age) 
+	(building-type-count-total market < 1) 			;<--fixed bug "no market"
+	(building-type-count-total archery-range > 1)
+    	(building-type-count-total blacksmith > 0)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(military-population >= 10)
+			(gold-amount > 200)))
+	(wood-amount >= 200)
+	(can-build-with-escrow market)
+=>
+	(build market)
+)
+
+; farm afer dark
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total archery-range > 1)
+	(building-type-count-total mining-camp > 0)
+	(building-type-count-total farm < 24)
+	(or	(idle-farm-count < 1)
+		(goal GOAL-HUMAN-PLAYER 1))
+	(can-build farm)
+=>
+	(build farm)
+)
+; one more - fixed bug "farm destroyed"
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total archery-range > 1)
+	(building-type-count-total mining-camp > 0)
+	(building-type-count-total farm < 24)
+	(or	(idle-farm-count < 1)
+		(goal GOAL-HUMAN-PLAYER 1))
+	(can-build farm)
+=>
+	(build farm)
+)
+
+(defrule
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(building-type-count-total stable > 0)
+	(building-type-count-total farm < 23)
+	(wood-amount > 200)
+	(idle-farm-count < 1)
+	(can-build farm)
+=>
+	(build farm)
+)
+
+(defrule
+	(current-age == castle-age)
+	(wood-amount >= 100)
+	(or	(idle-farm-count < 1)
+		(and 	(goal GOAL-HUMAN-PLAYER 1)
+			(idle-farm-count < 5)))
+	(building-type-count-total farm < 48)		;<--this AI never get at 45 farms in my 
+	(can-build farm)						; tests, the maximum of farms I've seen 
+=>									; is 41 or 42. I guess the reason is that 
+;	(set-strategic-number sn-maximum-town-size 29)	; whenever my AI has built the 42th farm,
+	(build farm)						; a certain farm is dead. So the 42th 
+)									; became the 41th, and so on.
+(defrule
+	(current-age == castle-age)
+	(wood-amount >= 100)
+	(or	(idle-farm-count <= 1)
+		(and	(goal GOAL-HUMAN-PLAYER 1)
+			(idle-farm-count <= 5)))		;<--this fact helps to build more farms
+	(building-type-count-total farm < 48)
+	(can-build farm)	
+=>
+;	(set-strategic-number sn-maximum-town-size 29)	;<-- this is a "trick" to make more farms
+	(build farm)						;		"around" Town-Center
+)
+
+(defrule
+	(current-age == castle-age)
+	(wood-amount >= 100)
+	(building-type-count-total town-center > 1)			;<-- to build more farms
+	(or	(idle-farm-count <= 6)
+		(goal GOAL-HUMAN-PLAYER 1))					;<-- I'd like to have more 
+	(or	(wood-amount > 300)						; than 45 farmers before I 
+		(or	(building-type-count-total farm >= 24)		; (my AI) get at imperial-age
+			(building-type-count-total archery-range >= 3))); but I couldn't manage to do
+	(building-type-count farm < 52)					; that  (>_<)
+	(can-build farm)
+=>
+;	(set-strategic-number sn-maximum-town-size 29)	;<--this is a "trick" to make more farms
+	(build farm)						;		"around" Town-Center
+)
+(defrule
+	(current-age == castle-age)
+	(wood-amount >= 100)
+	(building-type-count-total town-center > 1)
+	(or	(idle-farm-count < 7)
+		(goal GOAL-HUMAN-PLAYER 1))
+	(or	(wood-amount > 300)
+		(or	(building-type-count-total farm >= 24)
+			(building-type-count-total archery-range >= 3)))
+	(building-type-count-total farm < 52)		;<--"TOTAL" here ^^
+	(can-build farm)
+=>
+;	(set-strategic-number sn-maximum-town-size 29)	;<-- this is a "trick" to make more farms
+	(build farm)						;	"around" Town-Center (nearer)
+)
+(defrule
+	(current-age == castle-age)
+	(or	(building-type-count-total siege-workshop >= 1)
+		(or	(building-type-count-total town-center > 2)
+			(wood-amount > 360)))			;<--the more you use "build farm" action,
+	(or	(idle-farm-count <= 7)				;  the more farms are built. Bcoz the AI
+		(goal GOAL-HUMAN-PLAYER 1))			;  engine will optimize the "builder" if
+	(building-type-count-total farm < 54)		;  there are many rules for building.
+	(can-build farm)						; In other words, the more you use these
+=>									; actions "build farm", the nearer vil
+;	(set-strategic-number sn-maximum-town-size 33)	; will be farmer, therefore the more new
+	(build farm)						; farms are built
+)
+(defrule
+	(current-age == castle-age)
+	(or	(building-type-count-total siege-workshop >= 1)
+		(or	(building-type-count-total town-center > 2)
+			(wood-amount > 360)))
+	(or	(idle-farm-count < 8)
+		(goal GOAL-HUMAN-PLAYER 1))
+	(building-type-count farm < 54)			;<-- not "TOTAL" here ^^
+	(can-build farm)						;  this trick help build more farms 
+=>
+;	(set-strategic-number sn-maximum-town-size 33)
+	(build farm)
+)
+
+(defrule
+	(game-time > 300)						;<-- to delay in Death Match
+	(current-age >= castle-age)
+	(goal	GOAL-RESEARCHING-IMPERIAL 1)			;<--However, I always set the 
+	(or	(idle-farm-count <= 9)				; "theoretical" number of farms is >= 45,
+		(wood-amount >= 280))				; and the value of strategic number
+	(building-type-count-total farm < 54)		; sn-food-gatherer-percentage >= 45 
+	(can-build farm)						; during Castle-Age. And in Imperial-age
+=>								 	; it's higher but the result is less 
+;	(set-strategic-number sn-maximum-town-size 35)	; farmers than Castle Age ! What a damn
+	(build farm)						; bad thing (>_<) !?!
+)
+(defrule
+	(game-time > 300)						;<-- to delay in Death Match
+	(current-age >= castle-age)
+	(goal	GOAL-RESEARCHING-IMPERIAL 1)
+	(or	(idle-farm-count < 10)
+		(wood-amount >= 280))
+	(building-type-count farm < 54)			;<-- not "TOTAL" here ^^
+	(can-build farm)						; this trick helps build more farm
+=>
+;	(set-strategic-number sn-maximum-town-size 35)
+	(build farm)
+)
+								
+(defrule
+	(game-time > 300)						;<-- to delay in Death Match
+	(current-age >= imperial-age)
+	(or	(idle-farm-count <= 11)
+		(wood-amount >= 300))
+	(building-type-count-total farm < 54)
+	(can-build farm)
+=>
+;	(set-strategic-number sn-maximum-town-size 37)
+	(build farm)
+)
+(defrule
+	(game-time > 300)						;<-- to delay in Death Match
+	(current-age >= imperial-age)
+	(or	(idle-farm-count < 12)
+		(wood-amount > 300))
+	(building-type-count farm < 54)			;<-- ditto
+	(can-build farm)
+=>
+;	(set-strategic-number sn-maximum-town-size 37)
+	(build farm)
+)
+
+; after feudal
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total town-center > 0)
+	(building-type-count-total monastery < 1)
+	(can-build monastery)
+=>
+	(build monastery) ;<--ASAP to take relics 
+)
+; one more
+(defrule
+	(building-type-count-total town-center > 0)
+	(building-type-count-total monastery < 1)	; <-- this is very important in AI-Wars.
+	(can-build monastery)				; because an game AI-vs-AI take much time, and
+=>								; if an AI collect all relics, it can get more
+	(build monastery)					; than 5000 Gold that game, even > 10K Gold !!!
+)
+
+(defrule
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(current-age >= castle-age)
+			(and	(players-current-age any-enemy >= castle-age)
+				(current-age == feudal-age))))
+	(building-type-count-total barracks < 2) 			;<--prepare for enemy's cavalries
+	(can-build barracks)
+=>
+	(build barracks)
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 0)
+	(current-age == feudal-age)
+	(or	(goal GOAL-RESEARCHING-CASTLE 1)
+		(goal GOAL-CHEATS-NOW 1))
+	(building-type-count-total stable < 4)
+	(can-build stable)
+=>
+	(build stable)
+)
+
+(defrule
+	(or	(building-type-count-total farm > 26)		; <-- fixed bug " <= 2 TC "
+		(resource-found wood))
+	(or	(building-type-count town-center < 4)		; More TC helps your AI to make
+		(and	(building-type-count town-center < 7)	; more farms and keep your vils
+			(or	(goal GOAL-RESEARCHING-IMPERIAL 1)	; away from enemy's raiding
+				(goal GOAL-HUMAN-PLAYER 1)))) 	; In other words, < 4 TC will make
+	(can-build-with-escrow town-center)				; you get less food if the enemy
+=>										; attack, no matter how much farms
+	(build town-center)						; you have at the moment
+)
+(defrule
+	(or	(building-type-count-total farm > 26)		;<-- ditto
+		(resource-found gold))
+	(or	(building-type-count town-center < 4)
+		(and	(building-type-count town-center < 7)
+			(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+				(goal GOAL-HUMAN-PLAYER 1))))
+	(can-build-with-escrow town-center)
+=>
+	(build town-center)
+)
+(defrule
+	(or	(building-type-count-total farm > 26)		;<-- ditto
+		(resource-found stone))
+	(or	(building-type-count town-center < 4)
+		(and	(building-type-count town-center < 7)
+			(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+				(goal GOAL-HUMAN-PLAYER 1))))
+	(can-build-with-escrow town-center)
+=>
+	(build town-center)
+)
+; more camp
+(defrule
+	(game-time > 300)							;<-- to delay in Death-match game
+	(current-age >= castle-age)
+	(building-type-count-total monastery > 0)
+	(or	(building-type-count-total farm > 21)
+		(and	(building-type-count-total farm > 15)
+			(or	(goal GOAL-HUMAN-PLAYER 1)
+				(or	(building-type-count-total town-center >= 3)	;<-- fix bug "no  
+					(building-type-count-total castle >= 1)))))	;   more L.Camp"
+	(resource-found wood)
+;	(cc-players-unit-type-count 0 915 > 20)			;<-- ID of tree group is 915
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+(defrule
+	(game-time > 300)							;<-- to delay in Death-match game
+	(current-age >= castle-age)
+	(building-type-count-total monastery > 0)
+	(or	(building-type-count-total farm > 23)
+		(and	(building-type-count-total farm > 18)
+			(or	(goal GOAL-HUMAN-PLAYER 1)
+				(or	(building-type-count-total town-center >= 3)	;<-- fix bug "no  
+					(building-type-count-total castle >= 1)))))	;   more M.Camp"
+	(resource-found gold)
+	(dropsite-min-distance gold > 1)
+;	(cc-players-unit-type-count 0 932 > 1)			;<-- ID of gold mine group is 932
+	(can-build mining-camp)
+=>
+	(build mining-camp)
+)
+(defrule
+	(game-time > 300)							;<-- to delay in Death-match game
+	(current-age >= castle-age)
+	(building-type-count-total monastery > 0)
+	(or	(building-type-count-total farm > 26)
+		(and	(building-type-count-total farm > 20)
+			(or	(goal GOAL-HUMAN-PLAYER 1)
+				(or	(building-type-count-total town-center >= 3)	;<-- fix bug "no
+					(building-type-count-total castle >= 1)))))	;   more M.Camp"
+	(resource-found stone)
+	(dropsite-min-distance stone > 2)
+;	(cc-players-unit-type-count 0 908 > 1)			;<-- ID of stone mine group is 908
+	(can-build mining-camp)
+=>
+	(build mining-camp)
+)
+; more military
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(building-type-count-total stable < 4)
+	(wood-amount >= 210)
+	(can-build stable)
+=>
+	(build stable)
+)
+
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(or	(building-type-count-total town-center > 2)
+		(or	(goal GOAL-ANTI-MM 1)
+			(and	(research-completed ri-elite-skirmisher)
+				(building-type-count-total town-center > 1))))
+	(building-type-count-total archery-range < 3)
+	(can-build archery-range)
+=>
+	(build archery-range)
+)
+; more castle building
+(defrule
+	(not	(death-match-game))
+	(building-type-count-total siege-workshop < 2)
+	(or	(players-military-population every-enemy < 10)
+		(or	(and	(players-military-population every-enemy < 14)
+				(military-population > 20))
+			(and	(players-military-population every-enemy < 18)
+				(military-population > 25))))
+	(can-build-with-escrow siege-workshop)
+=>
+	(release-escrow wood)
+	(build-forward siege-workshop)
+)
+(defrule
+	(not	(death-match-game))
+	(building-type-count-total siege-workshop <= 1)			; <-- once more to fix the
+	(or	(players-military-population every-enemy < 10)		;    bug "no siege-workshop"
+		(or	(and	(players-military-population every-enemy < 14)
+				(military-population > 20))
+			(and	(players-military-population every-enemy < 18)
+				(military-population > 25))))
+	(can-build siege-workshop)
+=>
+	(build-forward siege-workshop)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(or	(research-completed ri-pikeman)
+		(goal GOAL-CHEATS-NOW 1))
+	(building-type-count-total barracks < 3)
+	(or	(building-type-count-total archery-range >= 3)
+		(or	(goal GOAL-HUMAN-PLAYER 1)
+			(or	(players-unit-type-count any-enemy scout-cavalry-line > 9)
+				(players-unit-type-count any-enemy knight-line > 5))))
+	(can-build barracks)
+=>
+	(build barracks)
+)
+
+(defrule
+	(current-age == castle-age)
+	(building-type-count-total siege-workshop < 2)
+	(or	(players-building-type-count any-enemy stone-wall-line > 15)
+		(or	(and	(players-military-population any-enemy <= 20)
+				(military-population > 30))
+			(and	(players-military-population any-enemy <= 25)
+				(military-population > 36))))
+	(or	(unit-type-count-total villager >= 75)
+		(building-type-count-total town-center >= 2))
+	(can-build siege-workshop)
+=>
+	(build-forward siege-workshop)
+)
+
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(building-type-count-total town-center >= 2)
+	(research-completed ri-elite-skirmisher)
+	(or	(players-unit-type-count any-enemy cavalry-archer-line > 12)
+		(or	(players-unit-type-count any-enemy archer-line > 15)
+			(or	(building-type-count-total town-center >= 3)
+				(military-population > 60))))
+	(building-type-count-total archery-range < 5)
+	(wood-amount >= 400)
+	(can-build archery-range)
+=>
+	(build archery-range)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(research-completed ri-pikeman)
+	(or	(building-type-count-total archery-range >= 5)
+		(or	(goal GOAL-AGGRESSIVE-ATTACK 1)
+			(goal GOAL-HUMAN-PLAYER 1)))
+	(or	(players-unit-type-count any-enemy scout-cavalry-line > 12)
+		(or	(players-unit-type-count any-enemy knight-line > 10)
+			(research-completed ri-long-swordsman)))
+	(building-type-count-total barracks < 5)
+	(wood-amount > 400)
+	(can-build barracks)
+=>
+	(build barracks)
+)
+
+(defrule
+	(not	(death-match-game))
+	(building-type-count-total siege-workshop == 0)
+	(or	(difficulty < hard)				;<-- this mean (difficulty == hardest)
+		(or	(building-type-count-total university >= 1)
+			(or	(building-type-count-total castle >= 1)
+				(and	(players-building-type-count any-enemy castle > 0)
+					(or	(players-building-type-count any-enemy castle > 1)
+						(goal GOAL-HUMAN-PLAYER 1))))))
+	(can-build siege-workshop)
+=>
+	(build siege-workshop)
+)
+
+; castle
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(unit-type-count-total villager > 70)
+	(players-military-population every-enemy < 20)
+	(military-population > 30)
+	(building-type-count-total castle <= 3) 
+	(can-build-with-escrow castle)
+=>
+	(set-strategic-number sn-number-forward-builders 10)
+	(release-escrow stone)
+	(build-forward castle)
+	(set-strategic-number sn-number-forward-builders 8)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total castle < 20)
+	(can-build-with-escrow castle)
+=>
+	(build castle)
+)
+; university
+(defrule
+	(not	(death-match-game))
+	(building-type-count-total university == 0)
+	(or	(gold-amount >= 600)
+		(or	(building-type-count-total archery-range >= 5)
+			(building-type-count siege-workshop > 0)))
+	(or	(difficulty < hard)				;<-- this mean (difficulty == hardest)
+		(or	(goal GOAL-CHEATS-NOW 1)
+			(building-type-count-total town-center > 3)))
+	(can-build university)
+=>
+	(build university)
+)
+(defrule
+	(not	(death-match-game))
+	(or	(building-type-count-total town-center > 5)
+		(building-type-count-total siege-workshop > 0))
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+			(difficulty < hard)))			;<-- this mean (difficulty == hardest)
+	(wood-amount > 950)
+	(building-type-count-total university < 2)
+	(can-build university)
+=>
+	(build university)
+)
+
+; more
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(or	(goal	GOAL-CHEATS-NOW 1)
+		(wood-amount >= 900))
+	(building-type-count-total siege-workshop > 0)
+	(building-type-count-total archery-range < 8)
+	(can-build archery-range)
+=>
+	(build archery-range)
+)
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(or	(research-completed ri-champion)
+			(wood-amount > 900)))
+	(building-type-count-total siege-workshop > 0)
+	(building-type-count-total barracks < 8)
+	(can-build barracks)
+=>
+	(build barracks)
+)
+
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(building-type-count-total town-center > 2)
+	(building-type-count-total barracks < 12)
+	(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+		(and	(goal GOAL-AGGRESSIVE-RUSH 1)
+			(soldier-count > 40)))
+	(wood-amount >= 950)
+	(can-build barracks)
+=>
+	(build-forward barracks)
+)
+(defrule
+	(not	(death-match-game))
+	(current-age >= castle-age)
+	(building-type-count-total town-center > 2)
+	(building-type-count-total archery-range < 12)
+	(goal GOAL-RESEARCHING-IMPERIAL 1)
+	(wood-amount > 1000)
+	(can-build archery-range) 
+=>
+	(build-forward archery-range)
+)
+
+(defrule
+	(not	(death-match-game))
+	(or	(goal GOAL-RESEARCHING-IMPERIAL 1)
+		(current-age >= imperial-age))
+	(or	(goal GOAL-CHEATS-NOW 1)
+		(wood-amount > 1050))
+	(or	(building-type-count-total town-center > 5)
+		(building-type-count-total siege-workshop > 1))
+	(building-type-count-total stable < 6)
+	(can-build stable)
+=>
+	(build stable)
+)
+
+(defrule
+	(not	(death-match-game))
+	(current-age >= imperial-age)
+	(building-type-count-total town-center > 3)
+	(or	(building-type-count-total stable > 4)
+		(goal GOAL-AGGRESSIVE-RUSH 1))
+	(wood-amount >= 1100)
+	(building-type-count-total stable < 8)
+	(can-build stable)
+=>
+	(build-forward stable)
+)
+(defrule
+	(not	(death-match-game))
+	(current-age >= imperial-age)
+	(building-type-count-total town-center > 4)
+	(building-type-count-total monastery < 3)
+	(building-type-count-total barracks > 10)
+	(wood-amount > 1100)
+	(can-build monastery) 
+=>
+	(build-forward monastery)
+)
+
+; =========================================ECONOMY============================================
+  
+; strategic numbers - Inspired by babygalaxian
+(defrule
+	(true)
+	(current-age == dark-age)
+=>
+	(set-strategic-number sn-percent-civilian-gatherers 90)
+	(set-strategic-number sn-percent-civilian-builders 10)
+	(set-strategic-number sn-percent-civilian-explorers 0)
+	(set-strategic-number sn-number-build-attempts-before-skip 3)
+	(set-strategic-number sn-food-gatherer-percentage 100)
+	(set-strategic-number sn-wood-gatherer-percentage 0)
+	(set-strategic-number sn-gold-gatherer-percentage 0)
+	(set-strategic-number sn-stone-gatherer-percentage 0)
+	(disable-self)
+)
+; set town size
+(defrule
+	(current-age == dark-age)
+=>
+	(set-strategic-number sn-special-attack-type1 barracks) 	;<-- "barracks" here if you
+	(set-strategic-number sn-special-attack-type2 barracks) 	; want to attack Stables and
+	(set-strategic-number sn-special-attack-type3 barracks) 	; Markets. I wonder which is
+	(set-strategic-number sn-maximum-town-size 13)		  	; better, since my tests get
+	(set-strategic-number sn-camp-max-distance 20)		  	; different results with each
+	(set-strategic-number sn-mill-max-distance 20)		  	; other <--it annoys me much
+	(set-strategic-number sn-special-attack-influence1 100) 		;100/0
+	(disable-self)
+)
+
+(defrule
+	(current-age == feudal-age)
+=>
+	(set-strategic-number sn-cap-civilian-gatherers 90)
+	(set-strategic-number sn-cap-civilian-builders 30) 	;<--look ! 
+	(disable-self)
+)
+(defrule
+	(current-age == feudal-age)
+=>
+	(set-strategic-number sn-special-attack-type1 monastery)	; siege-workshop/town-center
+	(set-strategic-number sn-special-attack-type2 monastery)	; castle/town-center
+	(set-strategic-number sn-special-attack-type3 monastery)	; siege-workshop/castle
+	(set-strategic-number sn-camp-max-distance 22)
+	(set-strategic-number sn-maximum-town-size 16)
+	(disable-self)						
+)
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total blacksmith > 0)
+=>
+	(set-strategic-number sn-maximum-town-size 18)
+	(set-strategic-number sn-camp-max-distance 27)
+	(disable-self)
+)
+
+(defrule
+	(current-age == castle-age)
+=>
+	(set-strategic-number sn-special-attack-type1 barracks) 		;castle/mill/0/129
+ 	(set-strategic-number sn-special-attack-type2 barracks) 		;castle/mill/109/130 
+	(set-strategic-number sn-special-attack-type3 barracks) 		;131/barracks
+	(set-strategic-number sn-maximum-town-size 24)		; <--small townsize can prevent 
+	(set-strategic-number sn-camp-max-distance 31)		; you from building farms or market
+	(set-strategic-number sn-mill-max-distance 28)
+	(chat-to-allies "31 I'm attacking now ")
+	(disable-self)
+)
+(defrule
+	(current-age == castle-age)
+	(or	(building-type-count-total town-center >= 2)
+		(and	(goal GOAL-HUMAN-PLAYER 1)
+			(building-type-count-total town-center > 1)))
+=>
+	(chat-to-all "30 Wololo ^^ ")
+	(set-strategic-number sn-maximum-town-size 27)
+	(set-strategic-number sn-camp-max-distance 37)
+	(set-strategic-number sn-mill-max-distance 34)
+	(chat-to-allies "31 Attack the losing enemy ")
+	(disable-self)
+)
+
+(defrule
+	(current-age == imperial-age)
+	(not	(death-match-game))
+=>
+	(chat-to-all "21 Nice town, I'll take it ! ")
+	(set-strategic-number sn-maximum-town-size 29)
+	(set-strategic-number sn-camp-max-distance 45)
+	(set-strategic-number sn-mill-max-distance 40)
+	(chat-to-allies "31 Attack the winning enemy ")
+	(disable-self)
+)
+(defrule
+	(game-time > 3000)
+=>
+	(set-strategic-number sn-maximum-town-size 29)
+	(set-strategic-number sn-camp-max-distance 80)
+	(set-strategic-number sn-mill-max-distance 50)
+	(chat-to-allies "31 Attack the winning enemy ")
+	(disable-self)
+)
+(defrule
+	(game-time > 4000)
+=>
+	(set-strategic-number sn-maximum-town-size 32)
+	(set-strategic-number sn-camp-max-distance 150) 	;<--small value here can prevent  
+	(set-strategic-number sn-mill-max-distance 60)		; you from collecting wood and gold
+	(chat-to-allies "31 Attack the winning enemy ")
+	(disable-self)
+)
+(defrule
+	(game-time > 4500)
+=>
+	(chat-to-all "21 Nice town, I'll take it ! ")
+	(set-strategic-number sn-maximum-town-size 35)
+	(set-strategic-number sn-camp-max-distance 200) 
+	(set-strategic-number sn-mill-max-distance 70)
+	(chat-to-allies "31 Attack the winning enemy ")
+	(disable-self)
+)
+(defrule
+	(game-time > 5000)
+=>
+	(chat-to-all "21 Nice town, I'll take it ! ")
+	(set-strategic-number sn-maximum-town-size 40)
+	(set-strategic-number sn-camp-max-distance 250) 
+	(set-strategic-number sn-mill-max-distance 80)
+	(chat-to-allies "31 Attack the winning enemy ")
+	(disable-self)
+)
+(defrule
+	(game-time > 6000)
+=>
+	(chat-to-all "21 Nice town, I'll take it ! ")
+	(set-strategic-number sn-maximum-town-size 45)
+	(set-strategic-number sn-camp-max-distance 300) 
+	(set-strategic-number sn-mill-max-distance 90)
+	(chat-to-allies "31 Attack the winning enemy ")
+	(disable-self)
+)
+
+(defrule
+	(building-type-count-total castle >= 6)
+=>
+	(set-strategic-number sn-maximum-town-size 200)			;<--useful with "aegis"
+	(disable-self)
+)
+; escrow amounts
+(defrule
+	(true)
+=>
+	(set-escrow-percentage food 0)
+	(set-escrow-percentage wood 0)
+	(set-escrow-percentage gold 0)
+	(set-escrow-percentage stone 0)
+	(disable-self)
+)
+(defrule 
+	(true) 
+=>
+   	(set-strategic-number sn-initial-exploration-required 0)
+   	(set-strategic-number sn-percent-exploration-required 100) 	;<--good exploring
+	(set-strategic-number sn-cap-civilian-explorers 2) 
+   	(set-strategic-number sn-number-explore-groups 1) 
+   	(set-strategic-number sn-minimum-explore-group-size 1) 
+   	(set-strategic-number sn-maximum-explore-group-size 1) 
+   	(set-strategic-number sn-percent-half-exploration 70)
+   	(set-strategic-number sn-percentage-explore-exterminators 60)
+   	(disable-self)
+)
+
+(defrule 
+   	(true) 
+=>
+   	(set-strategic-number sn-cap-civilian-builders 20)
+   	(set-strategic-number sn-cap-civilian-gatherers 80)
+   	(disable-self)
+)
+
+(defrule 
+   	(true) 
+=>
+   	(set-strategic-number sn-maximum-wood-drop-distance 6) 	;<--value 6 or 5 is better ?
+   	(set-strategic-number sn-maximum-food-drop-distance 10) 	;<--value 9 may be better
+   	(set-strategic-number sn-maximum-hunt-drop-distance 25) 	;<--It's to say 20 is best
+   	(set-strategic-number sn-maximum-gold-drop-distance 15)	;  but I use value 32 because
+   	(set-strategic-number sn-maximum-stone-drop-distance 15)	;  I will build a new mill
+   	(disable-self)
+)
+
+(defrule 
+   	(true) 
+=>
+   	(set-strategic-number sn-food-dropsite-distance 9) 		;<--the smaller, the better ? 
+   	(set-strategic-number sn-wood-dropsite-distance 3) 		;<-- the best value
+   	(set-strategic-number sn-stone-dropsite-distance 3)
+   	(set-strategic-number sn-gold-dropsite-distance 3)
+   	(disable-self)
+)
+
+(defrule 
+   	(true)
+=>
+   	(set-strategic-number sn-intelligent-gathering 1) 		;<--must be 1
+   	(set-strategic-number sn-minimum-dropsite-buffer 1) 		;<-- 0 is better for wood
+   	(set-strategic-number sn-retask-gather-amount 0)
+   	(set-strategic-number sn-max-retask-gather-amount 0)
+   	(disable-self)
+)
+; sell and buy (as important as research) - Inspired by xian xian
+(defrule
+	(current-age == feudal-age) 						; this is the best way to
+	(can-sell-commodity wood)   						; remain booming and rushing
+	(or	(wood-amount > 750)   						; A good player usually has
+		(and	(wood-amount > 700)					; a resource matching with 
+			(unit-type-count-total skirmisher-line < 10)))	; his strategy, but why? If 
+	(gold-amount < 150)							; you watch an experienced 
+=>											; player use his market, you 
+	(sell-commodity wood)							; will understand why he can
+)											; train, build and research  
+(defrule 	    									; continuously, although he 
+	(current-age == feudal-age)						; although he always lacks
+	(can-sell-commodity wood)						; all kind of resources.
+	(wood-amount > 800)
+	(or	(food-amount < 300)
+		(gold-amount < 450))
+=>
+	(sell-commodity wood) 					;<--to balance different resources
+)
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(wood-amount < 350)
+	(gold-amount > 600)
+	(can-buy-commodity wood)
+=>
+	(buy-commodity wood) 					;<--to balance different resources
+)
+(defrule
+	(current-age == castle-age)
+	(building-type-count-total market > 0)
+	(can-sell-commodity wood)
+	(wood-amount > 700)
+	(gold-amount < 200)
+=>
+	(sell-commodity wood) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total monastery > 0)
+	(wood-amount > 800)
+	(can-sell-commodity wood)
+	(or	(commodity-selling-price wood > 30)
+		(and	(commodity-selling-price wood > 20)
+			(wood-amount > 900)))
+=>
+	(sell-commodity wood)					;<--to balance different resources
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(wood-amount > 1000)
+	(can-sell-commodity wood)
+	(or	(commodity-selling-price wood > 17)
+		(and	(commodity-selling-price wood > 14)
+			(wood-amount > 1500)))
+=>
+	(sell-commodity wood)					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(wood-amount > 3500)
+	(can-sell-commodity wood)
+	(cc-players-unit-type-count 0 915 > 300)
+	(or	(gold-amount < 200)
+		(and	(cc-players-unit-type-count 0 915 > 400)
+			(gold-amount < 400)))
+=>
+	(sell-commodity wood)					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(wood-amount > 5000)
+	(can-sell-commodity wood)
+	(cc-players-unit-type-count 0 915 > 100)
+	(or	(gold-amount < 500)
+		(and	(cc-players-unit-type-count 0 915 > 200)
+			(gold-amount < 750)))			
+=>
+	(sell-commodity wood)					;<--to balance different resources
+)
+
+(defrule
+	(current-age == feudal-age)
+	(can-sell-commodity food)
+	(food-amount > 850)
+	(gold-amount < 150)
+=>
+	(sell-commodity food) 					;<--to start up Castle
+)
+(defrule
+	(current-age == feudal-age)
+	(can-buy-commodity food)
+	(goal GOAL-RESEARCHING-CASTLE 0)
+	(food-amount < 700)
+	(gold-amount > 400)
+=>
+	(buy-commodity food) 					;<--to start up Castle
+)
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(food-amount < 450)
+	(gold-amount > 900)
+	(can-buy-commodity food)
+=>
+	(buy-commodity food) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= feudal-age)
+	(building-type-count-total market > 0)
+	(can-buy-commodity food)
+	(food-amount < 100)
+	(gold-amount > 400)
+=>
+	(buy-commodity food) 					;<--to balance different resources
+)
+
+(defrule
+	(current-age == castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 850)
+	(gold-amount < 200)
+	(can-sell-commodity food) 
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+
+(defrule
+	(current-age == castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 450)
+	(or	(and	(commodity-selling-price food > 80)
+			(gold-amount < 400))
+		(and	(commodity-selling-price food > 50)
+			(gold-amount < 100)))
+	(can-sell-commodity food)
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 800)
+	(or	(gold-amount < 350)				;<-- to research "ri-champion"
+		(and	(food-amount > 850)
+			(gold-amount < 600)))
+	(commodity-selling-price food > 70)
+	(can-sell-commodity food)
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 950)
+	(gold-amount < 800)
+	(commodity-selling-price food > 50)
+	(can-sell-commodity food)
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 1300)
+	(can-sell-commodity food)
+	(or	(commodity-selling-price food > 40)
+		(and	(commodity-selling-price food > 30)
+			(food-amount > 1400)))
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 1500)
+	(can-sell-commodity food)
+	(or	(commodity-selling-price food > 17)
+		(and	(commodity-selling-price food > 14)
+			(food-amount > 1800)))
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 3000)
+	(can-sell-commodity food)
+	(gold-amount < 200)
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(food-amount > 4000)
+	(can-sell-commodity food)
+	(or	(gold-amount < 400)
+		(and	(food-amount > 6000)
+			(gold-amount < 900)))
+=>
+	(sell-commodity food) 					;<--to balance different resources
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(stone-amount > 200)
+	(gold-amount < 100)
+=>
+	(sell-commodity stone) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(stone-amount > 2400)
+	(commodity-selling-price stone > 30)
+=>
+	(sell-commodity stone) 					;<--to balance different resources
+)
+(defrule
+	(current-age >= castle-age)
+	(building-type-count-total market > 0)
+	(stone-amount > 1200)
+	(gold-amount < 200)
+	(or	(commodity-selling-price stone > 17)
+		(stone-amount > 1800))
+=>
+	(sell-commodity stone) 					;<--to balance different resources
+)
+(defrule
+	(not	(death-match-game))
+	(building-type-count-total market > 0)
+	(can-buy-commodity stone)
+	(stone-amount < 100)
+	(commodity-buying-price stone < 100)
+	(or	(gold-amount > 1000)
+		(and	(gold-amount > 600)
+			(commodity-buying-price stone < 70)))
+=>
+	(buy-commodity stone) 					;<--to balance different resources
+)
+
+; dark age start - build order
+; food
+(defrule
+	(current-age == dark-age)
+	(not (resource-found food))
+	(unit-type-count-total villager < 10)
+=>
+	(set-strategic-number sn-percent-civilian-gatherers 0)
+	(set-strategic-number sn-percent-civilian-builders 10)
+	(set-strategic-number sn-percent-civilian-explorers 90)
+	(disable-self)
+)
+(defrule
+	(current-age == dark-age)
+	(or	(resource-found food)
+		(not (sheep-and-forage-too-far)))
+=>
+	(set-strategic-number sn-percent-civilian-gatherers 80)
+	(set-strategic-number sn-percent-civilian-builders 20)
+	(set-strategic-number sn-percent-civilian-explorers 0)
+	(chat-to-all " GL HF ")
+	(chat-to-all " Muo'n AI ma.nh hon ba.n hãy Enter và gõ 11 ")
+	(disable-self)
+)
+; wood-cutter 
+(defrule
+	(current-age == dark-age)
+	(unit-type-count-total villager == 10) 		;<--value 11 is better for Persians
+=>
+	(set-strategic-number sn-wood-gatherer-percentage 10)
+	(set-strategic-number sn-food-gatherer-percentage 90)
+	(disable-self)
+)
+(defrule
+	(current-age == dark-age)
+	(unit-type-count-total villager == 15)
+=>
+	(set-strategic-number sn-wood-gatherer-percentage 35)
+	(set-strategic-number sn-food-gatherer-percentage 65)
+	(disable-self)
+)
+
+(defrule
+	(current-age == dark-age)
+=>
+	(set-strategic-number sn-minimum-boar-hunt-group-size 5) 		;<--not so good
+	(disable-self)
+)
+  
+(defrule
+	(current-age == dark-age)
+	(goal GOAL-RESEARCHING-FEUDAL 1)
+=>
+;	(chat-to-all "7 Set 50F 50W 0G 0S ")
+	(set-strategic-number sn-food-gatherer-percentage 50)
+	(set-strategic-number sn-wood-gatherer-percentage 50)
+	(chat-to-allies " I'm researching Feudal Age ")
+	(disable-self)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total market > 0)
+=>
+;	(chat-to-all "7 Set 45F 40W 15G 0S ")
+	(set-strategic-number sn-food-gatherer-percentage 45)
+	(set-strategic-number sn-wood-gatherer-percentage 40)
+	(set-strategic-number sn-gold-gatherer-percentage 15)
+	(disable-self)
+)
+(defrule
+	(current-age == feudal-age)
+	(building-type-count-total barracks > 0)
+=>
+	(set-strategic-number sn-percent-civilian-gatherers 90)
+	(set-strategic-number sn-percent-civilian-builders 10)
+)
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-HUMAN-PLAYER 1)
+	(building-type-count-total stable > 2)
+=>
+;	(chat-to-all "7 Set 45F 40W 15G 0S ")
+	(set-strategic-number sn-food-gatherer-percentage 40)
+	(set-strategic-number sn-wood-gatherer-percentage 30)
+	(set-strategic-number sn-gold-gatherer-percentage 35)		;<--hehe 105%
+	(disable-self)
+)
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+=>
+;	(chat-to-all "7 Set 40F 39W 26G 0S ")
+	(set-strategic-number sn-food-gatherer-percentage 40)
+	(set-strategic-number sn-wood-gatherer-percentage 39)
+	(set-strategic-number sn-gold-gatherer-percentage 26)		;<--105% better than 100%
+	(chat-to-allies " I'm researching Castle Age ")
+	(disable-self)
+)
+
+(defrule
+	(current-age == castle-age)
+=>
+	(chat-to-all "7 Set 42F 35W 23G 5S ")
+	(set-strategic-number sn-food-gatherer-percentage 42)
+	(set-strategic-number sn-wood-gatherer-percentage 35)
+	(set-strategic-number sn-gold-gatherer-percentage 23)
+    	(set-strategic-number sn-stone-gatherer-percentage 5)		;<--ditto
+	(chat-to-allies "31 I will Knight Rush the nearest guy ")
+	(disable-self)
+)
+(defrule
+	(current-age == castle-age)
+	(building-type-count-total town-center > 2)
+=>
+	(chat-to-all "7 Set 50F 28W 23G 4S ")
+	(set-strategic-number sn-food-gatherer-percentage 50) 
+	(set-strategic-number sn-wood-gatherer-percentage 28)
+	(set-strategic-number sn-gold-gatherer-percentage 23)
+    	(set-strategic-number sn-stone-gatherer-percentage 4)		;<--ditto
+	(chat-to-allies "36 Attack the losing enemy ")
+	(disable-self)
+)
+(defrule
+	(current-age == castle-age)
+	(goal GOAL-AGGRESSIVE-ATTACK 1)
+=>
+	(chat-to-all "7 Set 50F 30W 22G 3S ")
+	(set-strategic-number sn-food-gatherer-percentage 50)
+	(set-strategic-number sn-wood-gatherer-percentage 30)
+	(set-strategic-number sn-gold-gatherer-percentage 22)
+    	(set-strategic-number sn-stone-gatherer-percentage 3)		;<--ditto
+	(chat-to-allies "31 Let's wipe out the lowest score enemy ")
+	(disable-self)
+)
+(defrule
+	(current-age == castle-age)
+	(goal GOAL-RESEARCHING-IMPERIAL 1)
+=>
+	(chat-to-all "7 Set 56F 24W 20G 5S ")
+	(set-strategic-number sn-food-gatherer-percentage 56)
+	(set-strategic-number sn-wood-gatherer-percentage 24)
+	(set-strategic-number sn-gold-gatherer-percentage 20)
+	(set-strategic-number sn-stone-gatherer-percentage 5)		;<--ditto
+	(chat-to-allies " I'm researching Imperial Age ")
+	(disable-self)
+)
+
+(defrule
+	(not	(death-match-game))
+	(current-age == imperial-age)
+=>
+	(chat-to-all "7 Set 50F 28W 23G 4S ")
+	(set-strategic-number sn-food-gatherer-percentage 50) 
+	(set-strategic-number sn-wood-gatherer-percentage 28)
+	(set-strategic-number sn-gold-gatherer-percentage 23)
+    	(set-strategic-number sn-stone-gatherer-percentage 4)		;<--ditto
+	(chat-to-allies "31 Attack the top score enemy ")
+	(disable-self)
+)
+
+;(defrule
+;	(cc-players-unit-type-count 0 66 < 2)
+;=>
+;	(chat-to-all "7 Set 50F 25W 20G 5S ")
+;	(set-strategic-number sn-food-gatherer-percentage 50) 
+;	(set-strategic-number sn-wood-gatherer-percentage 25)
+;	(set-strategic-number sn-gold-gatherer-percentage 20)
+;    	(set-strategic-number sn-stone-gatherer-percentage 5)		;<--ditto
+;	(chat-to-allies "33 more Trade Units, and protect your Market ! ")
+;	(disable-self)
+;)
+
+; =========================================MILITARY===========================================
+ 
+; strategic numbers - Inspired by Tarkan_vn
+(defrule
+	(true)										; Some trial value 
+=>
+	(set-strategic-number sn-attack-winning-player 1) 			;1/-1
+	(set-strategic-number sn-attack-winning-player-factor -100) 	;-100/-10000
+	(set-strategic-number sn-attack-intelligence 1) 			;1/ 
+	(set-strategic-number sn-group-form-distance 60) 			;60 
+	(set-strategic-number sn-attack-group-gather-spacing 4) 		;7/9/5/144 <--important
+	(set-strategic-number sn-task-ungrouped-soldiers 0) 			;0/
+	(set-strategic-number sn-percent-attack-soldiers 0) 			;0/
+	(set-strategic-number sn-minimum-attack-group-size 8) 		;8/
+	(set-strategic-number sn-maximum-attack-group-size 60) 		;60/
+	(set-strategic-number sn-minimum-defend-group-size 6) 		;6/
+	(set-strategic-number sn-maximum-defend-group-size 18) 		;18/
+	(set-strategic-number sn-percent-enemy-sighted-response 90) 	;90/100/99
+	(set-strategic-number sn-enemy-sighted-response-distance 10) 	;10/8/9
+	(disable-self)
+)
+
+(defrule
+	(true)
+=>
+	(set-strategic-number sn-coop-share-attacking 300) 			;300/
+	(set-strategic-number sn-gather-defense-units 2) 			;2/1
+	(set-strategic-number sn-group-form-distance 40) 			;40/
+	(disable-self)
+)
+
+(defrule
+	(true)
+=>	
+	(set-strategic-number sn-allow-civilian-defense 1) 			;1/0
+	(set-strategic-number sn-random-placement-factor 0) 			;0/
+	(set-strategic-number sn-relic-return-distance 1000) 			;400/1000/500
+;	(enable-wall-placement 1)							;
+	(disable-self)
+)
+
+(defrule
+   	(true)
+=>
+   	(set-strategic-number sn-scale-minimum-attack-group-size 1)		;1/
+   	(set-strategic-number sn-scale-maximum-attack-group-size 10)	;10/
+   	(set-strategic-number sn-percent-attack-soldiers 100) 		;100/
+   	(set-strategic-number sn-target-evaluation-distance 80) 		;80/100
+   	(set-strategic-number sn-target-evaluation-siege-weapon 77)		;200/10000/77
+   	(set-strategic-number sn-target-evaluation-hitpoints 90) 		;90/-100
+	(set-strategic-number sn-target-evaluation-attack-attempts 40)	;40/-100
+	(set-strategic-number sn-target-evaluation-range 10) 			;10/-100
+	(set-strategic-number sn-target-evaluation-damage-capability 80)	;80/-100
+	(set-strategic-number sn-target-evaluation-rof 30) 			;30/-100
+	(set-strategic-number sn-target-evaluation-time-kill-ratio 70)	;70/-100
+   	(set-strategic-number sn-target-evaluation-in-progress 50) 		;50/-100
+   	(set-strategic-number sn-target-evaluation-kills 0) 			;0/
+   	(disable-self)
+)
+
+(defrule
+   	(true)
+=>
+   	(set-strategic-number sn-group-commander-selection-method 2)	;2/
+   	(set-strategic-number sn-group-form-distance 20) 			;20/ 
+   	(set-strategic-number sn-attack-group-gather-spacing 4) 		;4/7/144/9 <--important
+   	(set-strategic-number sn-attack-separation-time-randomness 0) 	;0/0
+   	(set-strategic-number sn-attack-intelligence 1) 			;1/
+   	(set-strategic-number sn-ignore-attack-group-under-attack 0) 	;1/0/0
+   	(disable-self)								 	
+)
+
+(defrule
+	(true)
+=>
+   	(set-strategic-number sn-number-defend-groups 1) 			;1/200
+   	(set-strategic-number sn-maximum-defend-group-size 1) 		;1/
+   	(set-strategic-number sn-gold-defend-priority 1) 			;7/1
+   	(set-strategic-number sn-stone-defend-priority 4) 			;4/0
+   	(set-strategic-number sn-forage-defend-priority 4) 			;4/0
+   	(set-strategic-number sn-relic-defend-priority 7) 			;7/0
+   	(set-strategic-number sn-town-defend-priority 8) 			;8/1
+   	(set-strategic-number sn-defense-distance 3) 				;3/5
+   	(set-strategic-number sn-defend-overlap-distance 3) 			;3/
+   	(set-strategic-number sn-gather-idle-soldiers-at-center 0) 		;0/
+   	(set-strategic-number sn-task-ungrouped-soldiers 0) 			;0/0
+   	(disable-self)
+)
+
+(defrule
+   	(true)
+=>
+   	(set-strategic-number sn-group-leader-defense-distance 1) 		;5/9 may be better
+   	(set-strategic-number sn-allow-civilian-defense 1) 			;<--must be 1
+   	(set-difficulty-parameter ability-to-maintain-distance 0) 		;0/100
+   	(set-difficulty-parameter ability-to-dodge-missiles 0) 		;0/100
+   	(set-strategic-number sn-consecutive-idle-unit-limit 60) 		;60/2
+   	(set-strategic-number sn-sentry-distance 0) 				;0/20
+   	(set-strategic-number sn-sentry-distance-variation 0) 		;0/
+   	(set-strategic-number sn-zero-priority-distance 0) 			;0/144
+   	(set-strategic-number sn-attack-separation-time-randomness 0) 	;0/0
+   	(disable-self)
+)
+; exploring
+(defrule
+	(true)
+=>
+	(set-strategic-number sn-number-enemy-objects-required 0) 		;0/
+	(set-strategic-number sn-percentage-explore-exterminators 70) 	;70/
+	(set-strategic-number sn-blot-exploration-map 1) 			;1/
+	(set-strategic-number sn-blot-size 1) 					;1/
+	(set-strategic-number sn-initial-exploration-required 1) 		;1/
+	(disable-self)
+)
+; groups for attack - Inspired by Bari
+;(defrule
+;	(or	(death-match-game)
+;		(current-age <= castle-age))
+;	(goal GOAL-CHEATS-NOW 0)
+;	(goal GOAL-HUMAN-PLAYER 0)
+;   	(not	(research-completed ri-pikeman))
+;	(not	(research-completed ri-elite-skirmisher))
+;	(strategic-number sn-number-attack-groups != 1)         
+;=>
+;    	(set-strategic-number sn-group-form-distance       80)  
+;    	(set-strategic-number sn-number-attack-groups       1)	;<-- one group attack  
+;    	(set-strategic-number sn-minimum-attack-group-size 20)	;<-- more effective when
+;    	(set-strategic-number sn-maximum-attack-group-size 20)	; AT-max-size == AT-min-size
+;)
+
+;(defrule
+;	(current-age <= castle-age)
+;	(goal GOAL-CHEATS-NOW 0)
+;   	(or	(goal GOAL-HUMAN-PLAYER 1)
+;		(or	(and	(goal GOAL-HUMAN-PLAYER 0)
+;				(or	(research-completed ri-pikeman)
+;					(research-completed ri-elite-skirmisher)))))
+;    	(strategic-number sn-number-attack-groups != 100)       
+;=>
+;    	(set-strategic-number sn-group-form-distance       25)
+;    	(set-strategic-number sn-number-attack-groups     100)	;<-- medium groups attack
+;    	(set-strategic-number sn-minimum-attack-group-size 15)	;<-- more effective when
+;    	(set-strategic-number sn-maximum-attack-group-size 15)	; AT-max-size == AT-min-size
+;)
+
+;(defrule
+;    	(goal GOAL-CHEATS-NOW 1)                    
+;    	(strategic-number sn-number-attack-groups != 200)
+;=>
+;    	(set-strategic-number sn-group-form-distance        5)
+;    	(set-strategic-number sn-number-attack-groups     200)	;<-- all (one-man) attack
+;    	(set-strategic-number sn-minimum-attack-group-size  1)	;<-- more effective when
+;    	(set-strategic-number sn-maximum-attack-group-size  1)	; AT-max-size == AT-min-size
+;)
+
+; set some flags
+(defrule
+	(goal GOAL-FAST-CASTLE 0)
+	(or	(map-size normal)							; In team games 3vs3 (4vs4)
+		(or	(map-size large)						; the FC Strategy is better
+			(or	(map-size giant)					; than the Flush.
+				(or	(map-type fortress)			; And it is much effective
+					(or	(map-type arena)			; when playing on a fully
+						(or	(map-type salt-marsh)	; close map
+							(map-type baltic)))))))
+=>
+	(set-goal GOAL-FAST-CASTLE 1)						;<-- NOT USED in this version
+)											; but will be in further ones
+
+(defrule
+	(goal GOAL-ANTI-MESO 0)
+	(or	(players-civ every-enemy aztec)
+		(players-civ every-enemy mayan))
+=>
+	(set-goal GOAL-ANTI-MESO 1)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-ANTI-GOTHIC 0)
+	(players-civ every-enemy gothic)
+=>
+	(set-goal GOAL-ANTI-GOTHIC 1)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-ANTI-VIKING 0)
+	(players-civ every-enemy viking)
+=>
+	(set-goal GOAL-ANTI-VIKING 1)
+	(disable-self)
+)
+; detect attack (using "cc-players-unit..." will get better results , but not fair-play)
+(defrule
+	(current-age == feudal-age)
+	(players-current-age any-enemy >= castle-age)
+	(goal GOAL-ANTI-MESO 0)
+	(goal GOAL-ANTI-GOTHIC 0)
+=>
+	(chat-to-allies " Creat more Spearman and rise Castle, pls ! ")
+	(set-goal GOAL-ANTI-KNIGHT 1)
+	(disable-self)
+)
+(defrule
+	(or	(players-unit-type-count any-enemy camel-line > 4)
+		(or	(players-unit-type-count any-enemy knight-line > 2)
+			(or	(players-unit-type-count any-enemy scout-cavalry-line > 6)
+				(players-unit-type-count any-enemy cavalry-archer-line > 3))))
+=>
+	(chat-to-allies "16 enemy's Cavalries ! ")
+	(set-goal GOAL-ANTI-KNIGHT 1)
+	(disable-self)
+)
+(defrule
+	(or	(players-unit-type-count any-enemy war-elephant-line > 1)
+		(or	(players-unit-type-count any-enemy cataphract-line > 2)
+			(players-unit-type-count any-enemy tarkan-line > 4)))
+=>
+	(chat-to-allies "16 enemy's Unit Uniques - Cavalries ! ")
+	(set-goal GOAL-ANTI-KNIGHT 1)
+	(disable-self)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(or	(players-unit-type-count any-enemy cavalry-archer-line > 6)
+		(or	(players-unit-type-count any-enemy archer-line > 8)
+			(and 	(players-unit-type-count any-enemy knight-line >= 4)
+				(or 	(players-unit-type-count any-enemy cavalry-archer-line >= 5)
+					(or	(players-unit-type-count any-enemy skirmisher-line >= 5)
+						(players-unit-type-count any-enemy archer-line >= 3))))))
+=>
+	(chat-to-allies "16 enemy's Range Units ! ")
+	(set-goal GOAL-ANTI-ARCHER 1)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-ANTI-ARCHER 0)
+	(or 	(players-unit-type-count any-enemy skirmisher-line > 32)
+		(or 	(players-unit-type-count any-enemy archer-line > 12)
+			(or	(players-unit-type-count any-enemy cavalry-archer-line > 8)
+				(players-unit-type-count any-enemy hand-cannoneer > 7))))
+=>
+	(chat-to-allies "16 enemy's Range Units ! ")
+	(set-goal GOAL-ANTI-ARCHER 1)
+)
+(defrule
+	(or 	(players-unit-type-count any-enemy longbowman-line > 9)
+		(or 	(players-unit-type-count any-enemy chu-ko-nu-line > 7)
+			(players-unit-type-count any-enemy plumed-archer-line > 8)))
+=>
+	(chat-to-allies "16 enemy's Range Unique Units ! ")
+	(set-goal GOAL-ANTI-ARCHER 1)
+	(disable-self)
+)
+(defrule
+	(or 	(players-unit-type-count any-enemy janissary-line > 10)
+		(or 	(players-unit-type-count any-enemy throwing-axeman-line > 15)
+			(players-unit-type-count any-enemy conquistador-line > 9)))
+=>
+	(chat-to-allies "16 enemy's Range Unique Units ! ")
+	(set-goal GOAL-ANTI-ARCHER 1)
+	(disable-self)
+)
+(defrule
+	(or 	(players-unit-type-count any-enemy mangudai-line > 10)
+		(or 	(players-unit-type-count any-enemy mameluke-line > 9)
+			(players-unit-type-count any-enemy war-wagon-line > 7)))
+=>
+	(chat-to-allies "16 enemy's Range Unique Units ! ")
+	(set-goal GOAL-ANTI-ARCHER 1)
+	(disable-self)
+)
+(defrule
+	(or 	(players-unit-type-count any-enemy mangonel-line > 5)
+		(or 	(players-unit-type-count any-enemy scorpion-line > 8)
+			(players-unit-type-count any-enemy bombard-cannon > 5)))
+=>
+	(chat-to-allies "16 enemy's Siege Range Units ! ")
+	(set-goal GOAL-ANTI-ARCHER 1)
+	(disable-self)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(goal GOAL-ANTI-ARCHER 1)
+	(players-unit-type-count every-enemy skirmisher-line < 32)
+	(players-unit-type-count every-enemy archer-line < 12)
+	(players-unit-type-count every-enemy cavalry-archer-line < 8)
+	(players-unit-type-count every-enemy hand-cannoneer < 7)
+	(or	(players-unit-type-count any-enemy scout-cavalry-line > 30)
+		(or	(players-unit-type-count any-enemy knight-line > 25)
+			(or	(players-unit-type-count any-enemy war-elephant-line > 15)
+				(players-unit-type-count any-enemy cataphract-line > 18))))
+=>
+	(chat-to-allies "16 enemy's Cavalries ! ")
+	(set-goal GOAL-ANTI-ARCHER 0)
+)
+
+(defrule
+	(current-age <= feudal-age)
+	(or	(players-unit-type-count any-enemy militiaman-line >= 7)
+		(or	(players-unit-type-count any-enemy man-at-arms > 5)
+			(players-unit-type-count any-enemy long-swordsman > 3)))
+=>
+	(chat-to-allies "16 enemy's Swordmans ! ")
+	(set-goal GOAL-ANTI-MM 1)
+	(disable-self)
+)
+(defrule
+	(or	(players-unit-type-count any-enemy woad-raider-line > 4)
+		(or	(players-unit-type-count any-enemy teutonic-knight-line > 2)
+			(or	(players-unit-type-count any-enemy jaguar-man-line > 4)
+				(or	(players-unit-type-count any-enemy samurai-line > 3)
+					(or	(players-unit-type-count any-enemy berserk-line > 3)
+						(players-unit-type-count any-enemy huskarl-line > 4))))))
+=>
+	(chat-to-allies "16 enemy's Unique Units - Infantries ! ")
+	(set-goal GOAL-ANTI-MM 1)
+	(disable-self)
+)
+
+(defrule
+	(players-current-age every-enemy >= castle-age)
+	(goal GOAL-ANTI-MESO 1)
+	(or	(players-unit-type-count any-enemy eagle-warrior-line > 2)
+		(and	(goal GOAL-ANTI-ARCHER 0)
+			(goal GOAL-ANTI-MM 0)))
+=>
+	(chat-to-allies "16 enemy's Eagle Warriors ! ")
+	(set-goal GOAL-ANTI-EAGLE 1)
+	(disable-self)
+)
+
+(defrule
+	(or 	(players-unit-type-count any-enemy monk >= 6)
+		(players-unit-type-count any-enemy missionary >= 3))
+=>
+	(chat-to-allies "16 enemy's Monks ! ")
+	(set-goal GOAL-ANTI-MONK 1)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-ANTI-MONK 1)
+	(or	(goal GOAL-ANTI-ARCHER 0)
+		(not 	(research-completed ri-heresy)))
+=>
+	(chat-to-all "11 Monk Rush ? ")
+	(set-goal GOAL-ANTI-ARCHER 1)
+	(disable-self)
+)
+ 
+(defrule
+	(timer-triggered TIMER-UNDER-ATTACK)
+=>
+	(set-goal GOAL-UNDER-ATTACK 0)
+)
+
+(defrule
+	(town-under-attack)
+	(players-military-population any-enemy > 0)
+=>
+	(set-goal GOAL-UNDER-ATTACK 1)
+	(disable-timer TIMER-UNDER-ATTACK)
+	(enable-timer TIMER-UNDER-ATTACK 6)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(game-time > 700)
+	(players-current-age every-enemy <= feudal-age)
+=>
+	(set-goal GOAL-DEFEND-FLUSH 1)
+	(chat-to-allies " Scout his gold-mine camp ")
+	(disable-self)
+)
+
+(defrule
+	(current-age <= feudal-age)
+	(building-type-count-total archery-range >= 2)
+	(goal GOAL-FIND-ENEMY 0)
+=>
+	(chat-to-allies " Where's my enemy ? ")
+	(set-strategic-number sn-number-explore-groups 2) 
+	(disable-self)
+)
+
+(defrule
+	(goal GOAL-AGGRESSIVE-ATTACK 0)
+	(current-age >= castle-age)
+	(unit-type-count-total villager > 80)
+	(soldier-count > 60)
+=>	
+    	(set-goal GOAL-AGGRESSIVE-ATTACK 1)
+)
+
+; attack-now, attack-group, town-size attack (TSA) ?! Which is better ?
+(defrule
+	(current-age == feudal-age)				; town-size attack is a special style of
+	(unit-type-count-total skirmisher-line < 13)	; attack. It's very useful in small maps,
+	(unit-type-count-total archer-line < 18)		; but there will be trouble if there are
+	(or	(soldier-count > 30)				; more than 2 enemies. Actually, it's a
+		(and	(goal GOAL-HUMAN-PLAYER 1)		; defense for town, when you increase
+			(soldier-count > 20)))			; your town-size step by step, then the 
+	(players-current-age any-enemy <= feudal-age)	; AI will attack all enemies' buildings
+=>									; in their ways. And he will attack the
+	(set-goal GOAL-AGGRESSIVE-RUSH 1)			; nearest building first. So it can keep
+	(chat-to-allies " I'm making a flush ")		; distance from enemies TC and save your
+	(attack-now)						; units. TS Attack can make all military
+	(disable-self)						; units focus to a target, and this is
+)									; great for AIs-war Death Match.
+
+(defrule
+	(current-age == feudal-age)					;<-- The First Stream (Feudal Rush)
+	(or	(soldier-count > 28)					; to detect enemies main units and
+		(and	(goal GOAL-ANTI-VIKING 1)			; creat counter units. And this 
+			(soldier-count > 20)))				; will hurt enemy's eco if he plays 
+	(goal GOAL-AGGRESSIVE-RUSH 1)					; Fast Castle. Then he will creat
+=>										; more units to defend. So he will 
+    	(set-strategic-number sn-number-explore-groups 1) 	; not research eco techs or get 
+	(set-strategic-number sn-percent-attack-soldiers 100)	; relics enough early to boom. This
+   	(attack-now)							; means he won't have better eco
+	(set-goal GOAL-FIRST-RUSH 0)					; than you though he rise up Castle
+	(disable-timer TIMER-AGGRESSIVE-RUSH)			; before you 10 mins ^^
+	(enable-timer TIMER-AGGRESSIVE-RUSH 30)
+	(disable-self)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(soldier-count > 20)
+	(or	(players-current-age any-enemy >= castle-age)
+		(players-military-population any-enemy >= 10)) 
+=> 
+	(set-goal GOAL-AGGRESSIVE-RUSH 0)
+)
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+	(timer-triggered TIMER-AGGRESSIVE-RUSH)			;<--rarely attack with these facts
+	(players-unit-type-count any-enemy cavalry-archer-line < 10)
+	(players-unit-type-count any-enemy eagle-warrior-line < 12)
+	(unit-type-count-total skirmisher-line < 15)
+	(soldier-count > 21)
+=>
+	(set-strategic-number sn-percent-attack-soldiers 100)
+     	(attack-now)
+	(set-strategic-number sn-number-defend-groups 0)
+	(disable-timer TIMER-AGGRESSIVE-RUSH)
+	(enable-timer TIMER-AGGRESSIVE-RUSH 30)
+)
+
+(defrule
+	(current-age >= feudal-age)
+	(soldier-count > 21)
+=>
+	(set-goal GOAL-AGGRESSIVE-RUSH 1)
+)
+
+(defrule
+	(current-age >= feudal-age)
+	(timer-triggered TIMER-FIRST-RUSH)				;<--this rule is not used but I
+	(goal GOAL-UNDER-ATTACK 0)					; still keep it for next versions 
+	(soldier-count >= 10)
+=>
+	(set-strategic-number sn-percent-attack-soldiers 1)
+	(attack-now)
+	(disable-timer TIMER-FIRST-RUSH)
+	(enable-timer TIMER-FIRST-RUSH 180)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(players-current-age any-enemy <= feudal-age)
+	(goal GOAL-UNDER-ATTACK 0)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(unit-type-count-total spearman-line < 13)		;<--the last Feudal-Rush to harass
+	(unit-type-count-total skirmisher-line < 15)		; enemies before doing Crazy Crush
+	(goal GOAL-ANTI-GOTHIC 0)					; However, this is no longer used
+	(soldier-count > 20)						; due to better Castle booming
+=>
+	(set-strategic-number sn-percent-attack-soldiers 100)
+	(attack-now)
+	(disable-self)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(or 	(goal GOAL-ANTI-KNIGHT 1)				; but I still prefer "attack-now"
+		(goal GOAL-AGGRESSIVE-ATTACK 1))			; because I can use it easier.
+	(goal GOAL-ANTI-EAGLE 0)					; "Attack-group" is very complex,
+	(soldier-count >= 30)						; and I don't like it at all.
+=>
+	(set-goal GOAL-AGGRESSIVE-RUSH 1)
+	(set-strategic-number sn-maximum-attack-group-size 30)
+	(set-strategic-number sn-percent-attack-soldiers 100)	;<-- "agressive or not" MEANS
+	(attack-now)							;	"kill or be killed"
+	(disable-timer TIMER-AGGRESSIVE-RUSH)
+	(enable-timer TIMER-AGGRESSIVE-RUSH 30)
+	(set-strategic-number sn-number-defend-groups 0)
+	(disable-self)
+)
+
+(defrule
+	(players-current-age any-enemy < imperial-age)
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+	(goal GOAL-UNDER-ATTACK 0)
+	(timer-triggered TIMER-AGGRESSIVE-RUSH)
+	(unit-type-count-total knight-line >= 3)
+	(soldier-count > 20)
+	(or	(players-unit-type-count any-enemy eagle-warrior-line < 8)
+		(and	(unit-type-count-total knight-line >= 12)
+			(players-unit-type-count any-enemy eagle-warrior-line < 18)))
+=>
+	(set-strategic-number sn-percent-attack-soldiers 100)
+	(attack-now)
+	(disable-timer TIMER-AGGRESSIVE-RUSH)
+	(enable-timer TIMER-AGGRESSIVE-RUSH 30)
+	(set-strategic-number sn-number-defend-groups 0)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(players-current-age any-enemy < imperial-age)
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+	(goal GOAL-UNDER-ATTACK 0)
+	(timer-triggered TIMER-AGGRESSIVE-RUSH)
+	(or	(players-unit-type-count any-enemy eagle-warrior-line < 18)
+		(and	(unit-type-count-total knight-line >= 20)
+			(players-unit-type-count any-enemy eagle-warrior-line < 32)))
+	(soldier-count > 40)
+=>
+	(set-strategic-number sn-percent-attack-soldiers 100)
+	(attack-now)
+	(set-strategic-number sn-number-defend-groups 0)
+)
+
+(defrule
+	(or	(players-current-age any-enemy < imperial-age)
+		(and	(unit-type-count-total militiaman-line > 36)
+			(not	(death-match-game))))
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+	(goal GOAL-UNDER-ATTACK 0)
+	(timer-triggered TIMER-AGGRESSIVE-RUSH)
+	(or	(players-unit-type-count any-enemy eagle-warrior-line < 40)
+		(unit-type-count-total knight-line > 25))
+	(soldier-count > 60)
+=>
+	(set-strategic-number sn-percent-attack-soldiers 100)
+	(attack-now)
+	(set-strategic-number sn-number-defend-groups 0)
+)
+
+(defrule
+	(current-age == castle-age)
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+	(goal GOAL-UNDER-ATTACK 0)
+	(timer-triggered TIMER-AGGRESSIVE-RUSH)
+	(unit-type-count-total knight-line >= 3)
+	(soldier-count > 80)
+=>
+	(set-strategic-number sn-percent-attack-soldiers 100)
+	(attack-now)
+	(set-strategic-number sn-number-defend-groups 0)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(soldier-count > 20)
+	(players-unit-type-count any-enemy eagle-warrior-line < 8)
+=>
+	(set-strategic-number sn-percent-attack-soldiers 100)
+	(attack-now)
+	(set-strategic-number sn-number-defend-groups 0)
+	(disable-timer TIMER-AGGRESSIVE-RUSH)
+	(enable-timer TIMER-AGGRESSIVE-RUSH 30)
+)
+
+; ==========================================SPECIAL===========================================
+
+; location - Inspired by Hector Ocampo
+#load-if-defined NOMAD-MAP 
+(defrule	
+	(true)
+=>
+	(chat-to-all " Nomad ?!! BUILD A TOWN-CENTER right now !!! ")
+	(disable-self)
+)
+(defrule
+	(building-type-count town-center == 0)
+	(game-time < 60)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+(defrule
+	(building-type-count town-center > 0)
+	(not (can-train villager))
+	(can-research ri-loom)
+=>
+	(research ri-loom)
+	(chat-to-allies " Build Dock and make Fishing ships ! ")
+	(disable-self)
+)
+
+(defrule
+ 	(current-age == dark-age)
+	(game-time < 250)
+=>	
+	(set-strategic-number sn-percent-civilian-explorers 80)
+  	(set-strategic-number sn-percent-civilian-builders 20)
+     	(set-strategic-number sn-percent-civilian-gatherers 0)
+     	(set-strategic-number sn-cap-civilian-explorers 5)
+	(set-strategic-number sn-total-number-explorers 5)
+	(set-strategic-number sn-cap-civilian-builders 2)
+	(set-strategic-number sn-initial-exploration-required 1)
+	(disable-self)
+)
+(defrule 	
+	(current-age == dark-age)
+	(game-time > 250)
+=>	
+	(set-strategic-number sn-percent-civilian-explorers 100)
+	(set-strategic-number sn-cap-civilian-explorers 3)
+	(set-strategic-number sn-cap-civilian-builders 2)
+	(set-strategic-number sn-total-number-explorers 3)
+)
+(defrule
+	(current-age == feudal-age)
+=>
+	(set-strategic-number sn-camp-max-distance 35)
+)
+(defrule
+	(current-age == feudal-age)
+	(players-population any-enemy <= 24)
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+	(timer-triggered TIMER-AGGRESSIVE-RUSH)
+	(or 	(unit-type-count-total militiaman-line >= 3)
+		(military-population >= 10))
+=>
+	(set-strategic-number sn-percent-attack-soldiers 90)
+	(attack-now)
+	(disable-timer TIMER-AGGRESSIVE-RUSH)
+	(enable-timer TIMER-AGGRESSIVE-RUSH 100)
+	(set-strategic-number sn-number-defend-groups 0)
+)
+(defrule
+	(current-age == feudal-age)
+	(players-population any-enemy <= 24)
+	(or	(unit-type-count-total skirmisher-line > 6)
+		(military-population >= 12))
+	(goal GOAL-AGGRESSIVE-RUSH 1)
+=>
+	(set-strategic-number sn-number-explore-groups 1)
+	(chat-local-to-self "31 Attack an enemy now ")
+	(set-strategic-number sn-percent-attack-soldiers 100)
+	(attack-now)
+	(enable-timer TIMER-AGGRESSIVE-ATTACK 200)
+	(disable-timer TIMER-AGGRESSIVE-RUSH)
+	(enable-timer TIMER-AGGRESSIVE-RUSH 10)
+	(set-goal GOAL-FIRST-RUSH 0)
+	(train spearman-line)
+	(disable-self)
+)
+#end-if
+
+#load-if-not-defined ARABIA-MAP		; I will resign in water map, because I couldn't
+#load-if-not-defined MONGOLIA-MAP		; force the bloody ships to attack as I want (>_<)
+#load-if-not-defined OASIS-MAP		; And I must have much more time to make a good
+#load-if-not-defined BLACK-FOREST-MAP	; performance in water-map. 
+(defrule
+	(or	(map-type archipelago)
+		(or	(map-type islands)
+			(or	(map-type migration)
+				(map-type team-islands))))
+		
+=>
+	(set-goal GOAL-GOOD-GAME 1) 			;<--resign in next 20s
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-all "101 Sorry, I won't play in Water-map ")
+	(chat-to-all " Please select Land Map (Arabia, Mongolia...) and restart ")
+	(disable-self)
+)
+#end-if
+#end-if
+#end-if
+#end-if
+
+#load-if-not-defined POPULATION-CAP-200
+#load-if-not-defined POPULATION-CAP-175
+#load-if-not-defined POPULATION-CAP-150		; I won't improve the pop-caps (75, 50,etc...)
+#load-if-not-defined POPULATION-CAP-125		; as I just do not like those setting as all
+(defrule
+	(game-time > 5)
+=>
+	(set-goal GOAL-GOOD-GAME 1) 			;<--resign in next 20s
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-all "101 Sorry, I won't play if Population-cap < 125 ")
+	(chat-to-all " Please select Pop-cap: 125, 150, 175 or 200 and restart ")
+	(disable-self)
+)
+#end-if
+#end-if
+#end-if
+#end-if
+
+#load-if-not-defined DIFFICULTY-HARDEST		; If you want to play an AI in Standard
+#load-if-not-defined DIFFICULTY-HARD		; difficulty, you'd better play with a Moderate
+#load-if-not-defined DIFFICULTY-MODERATE		; Computer. And if you want to play with an
+(defrule							; Easiest AI (to get a easy win), I think you
+	(game-time > 7)					; needn't to play with any AIs. You should play
+=>								; Death Match and use Cheatcodes to relax ^^
+	(set-goal GOAL-GOOD-GAME 1) ;<--resign in next 20s
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-all "101 Sorry, I won't play if Difficulty is Easy or Easiest ")
+	(chat-to-all " Please select Difficulty: Moderate, HARD or Hardest and restart ")
+	(disable-self)
+)
+#end-if
+#end-if
+#end-if
+
+;#load-if-not-defined STANDARD-RESOURCES-START
+#load-if-not-defined LOW-RESOURCES-START
+(defrule
+	(game-time > 11)
+=>
+	(set-goal GOAL-GOOD-GAME 1) 			;<--resign in next 20s
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-all "101 Sorry, I dislike starting with Medium or High Resource ")
+	(chat-to-all " Please select Standard = Low Resource and restart ")
+	(disable-self)
+)
+#end-if
+;#end-if
+
+#load-if-not-defined DARK-AGE-START			; Other starting age is not popular, and I am
+#load-if-not-defined POST-IMPERIAL-AGE-START	; too lazy to make an reasonable perfomance
+(defrule							; for my AI then. Thus I will resign
+	(game-time > 9)
+=>
+	(set-goal GOAL-GOOD-GAME 1) 			;<--resign in next 20s
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-all "101 Sorry, I wanna play RM Dark-Age-Start or Post-Imperial DM ")
+	(chat-to-all " Please select suitable Age and restart ")
+	(disable-self)
+)
+#end-if
+#end-if
+
+#load-if-defined DEFEND-WONDER			; ditto
+(defrule
+	(game-time > 13)
+=>
+	(set-goal GOAL-GOOD-GAME 1)
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-all "101 Sorry, I can't play Defend-Wonder ")
+	(chat-to-all " Please select another Game and restart ")
+	(disable-self)
+)
+#end-if
+
+#load-if-defined WONDER-RACE
+(defrule
+	(game-time > 13)
+=>
+	(set-goal GOAL-GOOD-GAME 1) 			;<--resign in next 20s
+	(disable-timer TIMER-GOOD-GAME )
+	(enable-timer TIMER-GOOD-GAME 20)
+	(chat-to-all "101 Sorry, I can't play Wonder-Race ")
+	(chat-to-all " Please select another Game and restart ")
+	(disable-self)
+)
+#end-if
+
+#load-if-defined SCENARIO				;<--not tested, but I think it's available
+(defrule
+	(game-time > 13)
+=>
+	(chat-to-all "7 Ahh, I rarely play Scenario ")
+	(chat-to-all " But I will do my best ~_~ ")
+	(disable-self)
+)
+#end-if
+
+#load-if-defined SCANDINAVIA-MAP
+(defrule
+	(building-type-count-total lumber-camp > 0)
+=>
+	(set-strategic-number sn-maximum-hunt-drop-distance 30)
+	(disable-self)
+)
+(defrule
+    	(building-type-count-total lumber-camp > 0)	
+	(building-type-count-total mill == 0)		;<-- first mill for hunting deer
+    	(or	(unit-type-count 122 >= 1)   			;<-- male hunter's ID == 122
+      	(or	(unit-type-count 216 >= 1)		;<-- female hunter's ID == 216
+			(or	(unit-type-count 56 >= 1)	;<-- male fisherman's ID == 56
+				(unit-type-count 57 >= 1))))	;<-- female fisherman's ID == 57
+	(can-build mill)
+=>
+    	(set-strategic-number sn-mill-max-distance 32)  ;<-- mill-distance == hunt-distance + 11
+    	(build mill)
+    	(set-strategic-number sn-maximum-hunt-drop-distance 20) ;<--for the 2nd mill (hunt, too)
+    	(disable-self)
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(unit-type-count-total villager >= 10)
+=>
+	(cc-add-resource food 150)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(unit-type-count-total villager >= 13)
+=>
+	(cc-add-resource food 100)
+	(disable-self)
+)
+#end-if
+
+; human-player (taunt-cheats mode) - Inspired by Mabuse
+(defrule
+	(game-time < 300)
+	(goal GOAL-HUMAN-PLAYER 0)
+	(or	(taunt-detected any-enemy 11)
+		(taunt-detected any-ally 11))
+=>
+	(chat-to-all " WTF what you are laughing ! ")
+	(chat-to-all "9 You'll see - HUMAN PLAYER !!! ")
+	(set-goal GOAL-HUMAN-PLAYER 1)
+	(acknowledge-taunt this-any-enemy 11)
+	(acknowledge-taunt this-any-ally 11)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(unit-type-count-total villager > 19)
+=>
+	(cc-add-resource food 380)			;<--Food for Fast Feudal so as to defend
+	(cc-add-resource wood 200)			;     enemy's DRush or Tower Rush
+	(cc-add-resource gold 50)			;<--Wood and Gold to make Militia soon
+	(chat-to-all " Douche ? Dark Age Rush ? " )
+	(chat-to-all " lolz I can defeat a Kmkm Forward easily ! " )
+	(disable-self)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(goal GOAL-RESEARCHING-FEUDAL 1)
+=>
+	(cc-add-resource 150 wood)
+	(disable-self)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(current-age >= feudal-age)
+	(can-research ri-double-bit-axe)
+=>
+	(cc-add-resource food 200)
+	(cc-add-resource wood 300)
+	(research ri-double-bit-axe)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(unit-type-count-total spearman-line >= 4)
+	(can-research ri-scale-mail)
+=>
+	(cc-add-resource food 100)	
+	(research ri-scale-mail)
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(current-age == feudal-age)
+	(resource-found gold)
+	(building-type-count-total archery-range > 1)
+	(building-type-count-total mining-camp == 0)
+	(can-build mining-camp)	
+=>
+	(build mining-camp)
+	(cc-add-resource food 100)
+	(cc-add-resource wood 150)
+	(set-strategic-number sn-food-gatherer-percentage 40)
+	(set-strategic-number sn-wood-gatherer-percentage 45)
+	(set-strategic-number sn-gold-gatherer-percentage 15)
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(can-research ri-gold-mining)
+=>
+	(cc-add-resource food 120)
+	(cc-add-resource gold 50)
+	(research ri-gold-mining)
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(or	(goal GOAL-RESEARCHING-FEUDAL 1)
+		(goal GOAL-CHEATS-NOW 1))
+	(building-type-count-total barracks < 1)
+	(can-build barracks)
+=>
+	(cc-add-resource food 100)
+	(cc-add-resource wood 150)
+	(build barracks)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(current-age != dark-age)
+	(building-type-count-total archery-range < 2)
+	(can-build archery-range)
+=>
+	(cc-add-resource food 100)		;<--useful if enemy's Scout attack AI's Builder
+	(cc-add-resource wood 150)		;    or when AI rebuild the buildings.
+	(build archery-range)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(current-age != dark-age)
+	(building-type-count-total stable < 1)
+	(can-build stable)
+=>
+	(cc-add-resource food 100)		;<--ditto
+	(cc-add-resource wood 150)
+	(build stable)
+)
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(current-age == feudal-age)
+	(goal GOAL-RESEARCHING-CASTLE 1)
+	(building-type-count-total stable < 4)
+	(can-build stable)
+=>
+	(cc-add-resource food 100)		;<--ditto
+	(cc-add-resource wood 150)
+	(build stable)
+)
+
+(defrule
+	(goal GOAL-HUMAN-PLAYER 1)
+	(current-age <= feudal-age)
+	(cc-players-unit-type-count every-enemy villager > 6)		; cc-players commands get 
+	(cc-players-building-type-count any-enemy town-center == 0) ; exact results, regardless
+=>											; of what the AI sees. So 
+	(cc-add-resource food 600)						; it is cheat. I only use 
+	(cc-add-resource wood 600)						; this command to protest
+	(chat-to-all "11 Wanna drop Town-Center (Douche) ? ")		; the strategy "TC-drop" aka
+	(chat-to-all " You're too late ! " )				; "Douche" , because this 
+	(disable-self)								; strategy can defeat any
+)											; non-cheating AI in 20 mins
+
+; super VNS_Halen_ (extremely taunt-cheats mode) - Inspired by xian_xian
+(defrule
+	(game-time <= 90)
+	(goal GOAL-CHEATS-NOW 0)
+	(or	(taunt-detected any-human 102) 	;<--this is more active than Human-Player mode
+		(taunt-detected any-computer 102)) 	;<--because VNS_Halen_ can call himself Super
+=>
+	(chat-to-all " Once on a tiger's back, it is ")
+	(chat-to-all "1 hard to alight - CHEATS NOW !!! ")
+	(set-goal GOAL-CHEATS-NOW 1)
+	(acknowledge-taunt this-any-human 102)
+	(acknowledge-taunt this-any-computer 102)
+	(disable-self)
+)
+(defrule
+	(game-time > 90)
+	(goal GOAL-CHEATS-NOW 0)
+	(or	(taunt-detected any-human 102)	
+		(taunt-detected any-computer 102))
+=>
+	(chat-to-all " It's too late for CHEATS-NOW ")
+	(chat-to-all "2 You must taunt 102 before 00:01:30 ")
+	(acknowledge-taunt this-any-human 102)
+	(acknowledge-taunt this-any-computer 102)
+	(disable-self)
+)
+
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+=>
+	(cc-add-resource food 50)
+	(cc-add-resource wood 50)
+	(cc-add-resource gold 50)
+	(cc-add-resource stone 50)
+	(enable-timer TIMER-CHEATS-NOW 40)
+	(disable-self)
+)
+
+(defrule							; The ordering difficulty setting is the
+	(goal GOAL-CHEATS-NOW 1)			; opposite of what one would expect !!!
+	(difficulty < hard)				; Make sure that is taken in account when
+	(timer-triggered TIMER-CHEATS-NOW)		; using facts to compare difficulty : 
+	(food-amount < 900)				; EASIEST > EASY > MODERATE > HARD > HARDEST
+=>
+	(cc-add-resource food 450)			; You can also use (difficulty == hardest)
+	(disable-timer TIMER-CHEATS-NOW)		; instead of (difficulty < hard) to make
+	(enable-timer TIMER-CHEATS-NOW 30)		; it more exactly
+)
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(difficulty < hard)				;<-- ditto
+	(timer-triggered TIMER-CHEATS-NOW)
+	(wood-amount < 900)
+=>
+	(cc-add-resource wood 460)
+	(disable-timer TIMER-CHEATS-NOW)
+	(enable-timer TIMER-CHEATS-NOW 30)
+)
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(difficulty < hard)				;<-- ditto
+	(timer-triggered TIMER-CHEATS-NOW)
+	(gold-amount < 900)
+=>
+	(cc-add-resource gold 380)
+	(disable-timer TIMER-CHEATS-NOW)
+	(enable-timer TIMER-CHEATS-NOW 30)
+)
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(difficulty < hard)				;<-- ditto
+	(timer-triggered TIMER-CHEATS-NOW)
+	(stone-amount < 900)
+=>
+	(cc-add-resource stone 280)
+	(disable-timer TIMER-CHEATS-NOW)
+	(enable-timer TIMER-CHEATS-NOW 30)
+)
+
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(difficulty >= hard)				;<-- this mean difficutly hard or
+	(timer-triggered TIMER-CHEATS-NOW)		;     moderate or easy or easiest
+	(food-amount < 800)
+=>
+	(cc-add-resource food 500)
+	(disable-timer TIMER-CHEATS-NOW)
+	(enable-timer TIMER-CHEATS-NOW 30)
+)
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(difficulty >= hard)				;<-- ditto
+	(timer-triggered TIMER-CHEATS-NOW)
+	(wood-amount < 800)
+=>
+	(cc-add-resource wood 480)
+	(disable-timer TIMER-CHEATS-NOW)
+	(enable-timer TIMER-CHEATS-NOW 30)
+)
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(difficulty >= hard)				;<-- ditto
+	(timer-triggered TIMER-CHEATS-NOW)
+	(gold-amount < 800)
+=>
+	(cc-add-resource gold 400)
+	(disable-timer TIMER-CHEATS-NOW)
+	(enable-timer TIMER-CHEATS-NOW 30)
+)
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(difficulty >= hard)				;<-- ditto
+	(timer-triggered TIMER-CHEATS-NOW)
+	(stone-amount < 800)
+=>
+	(cc-add-resource stone 300)
+	(disable-timer TIMER-CHEATS-NOW)
+	(enable-timer TIMER-CHEATS-NOW 30)
+)
+
+(defrule
+	(goal GOAL-CHEATS-NOW 1)
+	(current-age <= feudal-age)
+	(cc-players-unit-type-count every-enemy villager >= 6)	; I didn't want to use any
+	(cc-players-building-type-count any-enemy town-center == 0) ; cc-players command. But
+=>											; some people used the strat
+	(cc-add-resource food 500)						; "TC-Drop" aka "Douche" to
+	(cc-add-resource wood 500)						; defeat my AI quickly, and
+	(chat-to-all "11 Wanna drop Town-Center (Douche) ? ")		; they said: "I can take out
+	(chat-to-all " You're too late ! " )				; this AI in 20 min". That's
+	(disable-self)								; why I use cc-commands here
+)											
+
+(defrule
+	(current-age == feudal-age)
+	(goal GOAL-CHEATS-NOW 1)
+=>
+	(chat-to-all "8 One cannot refuse to eat just because ")
+	(chat-to-all " there is a chance of being choked ")
+	(set-strategic-number sn-maximum-town-size 24)
+	(disable-self)
+)
+(defrule
+	(current-age == castle-age)
+	(goal GOAL-CHEATS-NOW 1)
+=>
+	(chat-to-all "8 Of all the strategies, to know when to quit is the best ")
+	(set-strategic-number sn-maximum-town-size 24)
+	(disable-self)
+)
+(defrule
+	(current-age == imperial-age)
+	(goal GOAL-CHEATS-NOW 1)
+=>
+	(chat-to-all "23 Raiding party !!!")
+	(set-strategic-number sn-maximum-town-size 30)
+	(disable-self)
+)
+
+; ======================================SOME ID NUMBERS=======================================
+
+; units :
+
+; gold mine	(1 tile)			66	(standard)		932	(group)
+; stone mine (1 tile)			102	(standard)		908	(group)
+; shore fish (1 tile)			69	(standard)		933	(group)
+; tree group (1 tile)			915
+; fish group (1 tile)			905
+; boar					48	(alive)		356	(dead)
+; deer					65	(alive)		43	(dead)
+; relic					285	(standard)		286	(being carried by a monk)
+
+; arrow					54	(Town-center)	504	(Tower)	746	(castle)
+
+; packed trebuchet			331	(standard)		981	(group)	735	(dead)
+; unpacked trebuchet			42	(standard)		984	(group)	194	(dead)
+
+; archer-line				-299	(alive)		3	(dead)
+; cavalry-archer-line			-298	(alive)		34	(dead)
+; eagle-warrior-line			-297	(alive)		754	(dead)
+; militiaman-line				-296	(alive)		152	(dead)
+; spearman-line				-295	(alive)		140	(dead)
+; skirmisher-line				-295	(alive)		238	(dead)
+; camel-line				-288	(alive)		113	(dead)
+; knight-line				-287	(alive)		111	(dead)
+; scout-cavalry-line			-286	(alive)		449	(dead)
+
+; villager					83	(working)		293	(idle)
+; male gold miner				579	(alive)		580	(dead)
+; female gold miner			581	(alive)		582	(dead)
+; male stone miner			124	(alive)		229	(dead)
+; female stone miner			220	(alive)		221	(dead)
+; male lumberjack				123	(alive)		228	(dead)
+; female lumberjack			218	(alive)		219	(dead)
+; male hunter				122	(alive)		227	(dead)
+; female hunter				216	(alive)		217	(dead)
+; male fisherman				56	(alive)		58	(dead)
+; female fisherman			57	(alive)		60	(dead)
+
+; research-items :
+
+; ri-stonecutting (treatmill crane)		54
+; herbal medicine					441
+; ri-deck-guns (elite cannon galleon)	376
+; spies/ treason					408
+
+; garland wars (Aztecs)				24
+; yeomen (Britons)				3
+; logistica	(Byzantines)			61
+; furor celtica (Celts)				5
+; rocketry (Chinese)				52
+; bearded axe (Franks)				83
+; anarchy (Goths)					16
+; perfusion (Goths)				457
+; atheism (Huns)					21
+; kataparuto (Japanese)				59
+; shinkichon (Koreans)				445
+; eldorado (Mayans)				4
+; drill (Mongols)					6
+; mahouts (Persians)				7
+; zealotry (Saracens)				9
+; supremacy (Spanish)				440
+; crenellations (Teutons)			11
+; artillery (Turks)				10
+; berserkergang (Vikings)			49
+
+; I used the "identifier" instead of ID-Number of ri-items, units and buildings to make my  
+; script more understandable. And I eliminated all "chat-local-to-self" to shorten the script
+
+
+; ********************************************************************************************
+
+
+; =========================================HAVE FUN !=========================================
+
+; VNS_Halen_ is a sweet AI for Age of Kings - The Conquerors Expansion. You can use it to
+; test your AI as well as to improve your skills in AOK-TC with many level of difficulty.
+; Besides, it’s a very simple AI which might help newbie-scripters to make their own AI.
+; Actually, I made this AI for my friends (zone-rate 1.7k-2k) in my VNS-Clan practising 
+; “1vs1 Arabia”. Therefore it's a bit different from other AIs. This started out just for fun,
+; but the end result is much better than I had originally thought possible (It can get at pop
+; 200/200 before 50 mins, and sometimes before 48 mins without any cheats)
+
+
+; @@       @@ @@@   @@   @@@@          @@    @@      @      @@       @@@@@@@@ @@@   @@
+;  @@     @@  @@@@  @@ @@@  @@@        @@    @@     @@@     @@       @@       @@@@  @@
+;   @@   @@   @@ @@ @@   @@	         @@@@@@@@    @@ @@    @@       @@@@@@@@ @@ @@ @@
+;    @@ @@    @@  @@@@     @@          @@@@@@@@   @@   @@   @@       @@@@@@@@ @@  @@@@
+;     @@@     @@   @@@ @@@  @@@        @@    @@  @@@@@@@@@  @@@@@@@@ @@       @@   @@@
+;      @      @@    @@   @@@@   @@@@@@ @@    @@ @@       @@ @@@@@@@@ @@@@@@@@ @@    @@ @@@@@@
+
+
+; This is not the best Land Map AI, of course. And it's still not in Top 5, I know. But I hope
+; this AI will help many people (newbie-scripters or players) in playing or scripting. AOK 
+; (AOC) is an excellent game (the best RTS I've seen), and we all thank to Ensemble Studios.
+; Its AI-Engine is also very great, it changed the RTS-Game Worlds - even more than Replays
+; (recorded games). If you're interested in scripting AI for this game, you will find FUN.
+; To be a master of AI, techical mastery is necessary (but not sufficient). To achieve that 
+; you have to analyse the game, to plan your AI exactly and to test your AI carefully. 
+; Good luck !
+
+; ==========================================THE END===========================================
