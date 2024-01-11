@@ -74,10 +74,10 @@ h3{
 .ies2023{
     text-align: center;
     border: 2px solid green;
-    margin-left: 100%;
-    margin-right: 100%;
+    margin-left: 10%;
+    margin-right: 20%;
     font-weight: bold;
-    padding:1;
+    padding:0;
     border-radius: 6px;
     color: tomato;
     text-decoration: none;
