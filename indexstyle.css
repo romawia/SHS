@@ -77,7 +77,8 @@ h3{
     text-decoration-style: none;
 }
 .ies2023new{
-padding: 0%;
+padding: auto;
+margin: auto;
 border: 3px solid red;
 list-style: none;
 }
