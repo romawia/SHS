@@ -5,7 +5,7 @@ function valid()
 var user = document.getElementById("logname").value;
 var passw= document.getElementById("logpass");
 
-var exact= "shshigh";
+var exact= "malsawmkimi";
 
 if(passw.value!==exact)
     {
